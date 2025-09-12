@@ -17,10 +17,15 @@ export default function HomePage() {
               स्वास्थ्यसेतु - Bridge to Health
             </Text>
           </View>
-          <View className="flex-row space-x-3 gap-2">
+          <View className="flex-row space-x-2 gap-2">
             <TouchableOpacity className="p-2 rounded-full bg-green-100">
               <Ionicons name="wifi" size={20} color="#059669" />
             </TouchableOpacity>
+            <Link href="/test-components" asChild>
+              <TouchableOpacity className="p-2 rounded-full bg-purple-100">
+                <Ionicons name="construct-outline" size={20} color="#7C3AED" />
+              </TouchableOpacity>
+            </Link>
             <Link href="/settings" asChild>
               <TouchableOpacity className="p-2 rounded-full bg-gray-100">
                 <Ionicons name="settings-outline" size={20} color="#374151" />
