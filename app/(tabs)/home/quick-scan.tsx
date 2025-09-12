@@ -1,9 +1,10 @@
 import { View, Text } from 'react-native'
+import React from 'react'
 
-export default function homePage() {
+export default function quickScanPage() {
   return (
     <View className='flex-1 justify-center items-center'>
-      <Text>homePage</Text>
+      <Text>quickScanPage</Text>
     </View>
   )
 }

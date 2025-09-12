@@ -3,11 +3,13 @@ import { Ionicons } from "@expo/vector-icons";
 
 export default function _layout() {
   return (
-    <Tabs screenOptions={{ headerShown: false, tabBarActiveTintColor: "black", tabBarInactiveTintColor: "gray" }}>
+    <Tabs screenOptions={{ tabBarActiveTintColor: "black", tabBarInactiveTintColor: "gray" }}>
       <Tabs.Screen
         name="home"
         options={{
           title: "Home",
+          headerShown: false,
+          popToTopOnBlur: true,
           tabBarIcon: ({color, size}) => <Ionicons name="home" size={size} color={color} />,
         }}
       />
