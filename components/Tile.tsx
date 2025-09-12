@@ -23,7 +23,7 @@ export default function Tile({ title, onPress, icon, description }: TileProps) {
           </View>
         )}
         
-        <Text className="text-lg font-semibold text-gray-900 text-center">
+        <Text className="font-semibold text-gray-900 text-center">
           {title}
         </Text>
         
