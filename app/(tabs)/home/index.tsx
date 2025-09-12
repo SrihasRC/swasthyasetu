@@ -7,14 +7,11 @@ export default function HomePage() {
   return (
     <View className="flex-1 bg-gray-50">
       {/* Top Bar */}
-      <View className="bg-white px-4 py-4 border-b border-gray-100">
+      <View className="bg-white px-4 pb-4 pt-12 border-b border-gray-100">
         <View className="flex-row justify-between items-center">
           <View>
             <Text className="text-2xl font-bold text-gray-900">
-              Good Morning
-            </Text>
-            <Text className="text-gray-600 mt-1">
-              Welcome to SafeWaters
+              SwasthyaSetu
             </Text>
           </View>
           <Link href="/settings" asChild>

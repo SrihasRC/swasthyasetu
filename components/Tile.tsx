@@ -12,8 +12,9 @@ export default function Tile({ title, onPress, icon, description }: TileProps) {
   return (
     <TouchableOpacity
       onPress={onPress}
-      className="bg-white rounded-lg p-6 shadow-sm border border-gray-100 active:scale-95"
+      className="bg-white rounded-lg p-6 shadow-sm border border-gray-100"
       style={{ elevation: 2 }}
+      activeOpacity={0.7}
     >
       <View className="items-center space-y-3">
         {icon && (
