@@ -1,20 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import Card from '../../components/Card';
+import AlertDetailsModal from '../../components/AlertDetailsModal';
 import Header from '../../components/Header';
-
-interface Alert {
-  id: string;
-  title: string;
-  description: string;
-  location: string;
-  timeAgo: string;
-  riskLevel: 'HIGH' | 'MEDIUM' | 'LOW' | 'RESOLVED';
-  type: 'outbreak' | 'contamination' | 'notice' | 'weather';
-  affectedCount?: number;
-  isRead: boolean;
-}
+import { Alert } from '../../types/alert';
 
 const mockAlerts: Alert[] = [
   {
@@ -61,9 +50,11 @@ const mockAlerts: Alert[] = [
   },
 ];
 
-export default function AlertsPage() {
-  const [alerts, setAlerts] = useState<Alert[]>(mockAlerts);
+export default function AlertsScreen() {
   const [refreshing, setRefreshing] = useState(false);
+  const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
+  const [showDetails, setShowDetails] = useState(false);
+  const [alerts, setAlerts] = useState<Alert[]>(mockAlerts);
 
   const getRiskColor = (level: Alert['riskLevel']) => {
     switch (level) {
@@ -72,6 +63,26 @@ export default function AlertsPage() {
       case 'LOW': return 'bg-yellow-500';
       case 'RESOLVED': return 'bg-green-500';
       default: return 'bg-gray-500';
+    }
+  };
+
+  const getRiskBorderColor = (level: Alert['riskLevel']) => {
+    switch (level) {
+      case 'HIGH': return 'border-red-500';
+      case 'MEDIUM': return 'border-orange-500';
+      case 'LOW': return 'border-yellow-500';
+      case 'RESOLVED': return 'border-green-500';
+      default: return 'border-gray-500';
+    }
+  };
+
+  const getRiskLightBorder = (level: Alert['riskLevel']) => {
+    switch (level) {
+      case 'HIGH': return 'border-red-200';
+      case 'MEDIUM': return 'border-orange-200';
+      case 'LOW': return 'border-yellow-200';
+      case 'RESOLVED': return 'border-green-200';
+      default: return 'border-gray-200';
     }
   };
 
@@ -94,13 +105,12 @@ export default function AlertsPage() {
   };
 
   const handleAlertPress = (alert: Alert) => {
+    setSelectedAlert(alert);
+    setShowDetails(true);
     // Mark as read
     setAlerts(prev => 
       prev.map(a => a.id === alert.id ? { ...a, isRead: true } : a)
     );
-    
-    // Navigate to alert details (will implement in a separate screen)
-    console.log('Alert clicked:', alert.id);
   };
 
   const unreadCount = alerts.filter(a => !a.isRead).length;
@@ -141,102 +151,113 @@ export default function AlertsPage() {
               key={alert.id}
               onPress={() => handleAlertPress(alert)}
               className="mb-4"
-              activeOpacity={0.7}
+              activeOpacity={0.8}
             >
-              <Card variant="elevated">
-                <View className="flex-row items-start space-x-3">
-                  {/* Content */}
-                  <View className="flex-1">
-                    <View className="flex-row items-center justify-between mb-2">
-                      <View className="flex-row items-center gap-2">
-                        {!alert.isRead && (
-                          <View className="w-2 h-2 bg-blue-500 rounded-full" />
-                        )}
-                        <View className={`px-3 py-1 rounded-full ${getRiskColor(alert.riskLevel)}`}>
-                          <Text className="text-xs font-bold text-white">
-                            {alert.riskLevel}
-                          </Text>
-                        </View>
-                      </View>
+              <View 
+                className={`p-5 rounded-xl border-l shadow-sm bg-white border ${getRiskBorderColor(alert.riskLevel)} ${getRiskLightBorder(alert.riskLevel)}`}
+              >
+                {/* Header Row */}
+                <View className="flex flex-row items-center justify-between mb-4">
+                  <View className="flex flex-row items-center gap-3">
                       <Ionicons 
                         name={getRiskIcon(alert.type)} 
-                        size={22} 
-                        color="#6B7280" 
+                        size={20} 
+                        color="#374151" 
                       />
+                    <View className={`px-3 py-1 rounded-full ${getRiskColor(alert.riskLevel)}`}>
+                      <Text className="text-xs font-bold text-white">
+                        {alert.riskLevel}
+                      </Text>
                     </View>
+                  </View>
+                  
+                  {/* Unread Indicator */}
+                  {!alert.isRead ? (
+                    <View className="flex flex-row items-center bg-blue-100 px-3 py-1 rounded-full gap-2">
+                      <View className="w-2 h-2 bg-blue-500 rounded-full" />
+                      <Text className="text-xs font-bold text-blue-700">NEW</Text>
+                    </View>
+                  ) : (
+                    <View className="flex flex-row items-center gap-1">
+                      <Ionicons name="checkmark-circle" size={16} color="#059669" />
+                      <Text className="text-xs font-medium text-green-600">READ</Text>
+                    </View>
+                  )}
+                </View>
 
-                    <Text className="text-lg font-semibold text-gray-900 mb-2">
-                      {alert.title}
-                    </Text>
-                    
-                    <Text className="text-sm text-gray-600 mb-3 leading-5">
-                      {alert.description}
-                    </Text>
+                {/* Content */}
+                <View className="flex flex-col gap-3">
+                  <Text className="text-lg font-bold text-gray-900 leading-6">
+                    {alert.title}
+                  </Text>
+                  
+                  <Text className="text-sm text-gray-600 leading-5">
+                    {alert.description}
+                  </Text>
 
-                    <View className="flex-row items-center justify-between mb-2">
-                      <View className="flex-row items-center">
-                        <Ionicons name="location-outline" size={16} color="#6B7280" />
-                        <Text className="text-sm font-medium text-gray-700 ml-1">
-                          {alert.location}
-                        </Text>
-                      </View>
-                      <Text className="text-xs text-gray-500">
+                  <View className="flex flex-row items-center justify-between">
+                    <View className="flex flex-row items-center gap-2">
+                      <Ionicons name="location-outline" size={16} color="#6B7280" />
+                      <Text className="text-sm font-medium text-gray-700">
+                        {alert.location}
+                      </Text>
+                    </View>
+                    <View className="flex flex-row items-center gap-1">
+                      <Ionicons name="time-outline" size={14} color="#9CA3AF" />
+                      <Text className="text-xs text-gray-500 font-medium">
                         {alert.timeAgo}
                       </Text>
                     </View>
-
-                    {alert.affectedCount && (
-                      <View className="flex-row items-center mb-3">
-                        <Ionicons name="people-outline" size={16} color="#6B7280" />
-                        <Text className="text-sm text-gray-600 ml-1">
-                          {alert.affectedCount} cases affected
-                        </Text>
-                      </View>
-                    )}
-
-                    {alert.riskLevel !== 'RESOLVED' && (
-                      <View className="mt-3 pt-3 border-t border-gray-100">
-                        <TouchableOpacity className="bg-blue-600 py-3 px-4 rounded-lg">
-                          <Text className="text-white text-sm font-semibold text-center">
-                            View Details
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
-                    )}
                   </View>
-                </View>
-              </Card>
-            </TouchableOpacity>
-          ))}
 
-          {/* Emergency Contact Section */}
-          <View className="mt-4 p-6 bg-white rounded-lg shadow-sm border border-gray-100">
-            <View className="items-center">
-              <View className="flex-row items-center mb-4">
-                <Ionicons name="warning" size={24} color="#DC2626" />
-                <Text className="text-xl font-bold text-red-600 ml-2">
-                  Emergency Contact
-                </Text>
+                  {alert.affectedCount && (
+                    <View className="flex flex-row items-center gap-2">
+                      <Ionicons name="people-outline" size={16} color="#6B7280" />
+                      <Text className="text-sm text-gray-600 font-medium">
+                        {alert.affectedCount} cases affected
+                      </Text>
+                    </View>
+                  )}
+
+                  {/* Tap to view indicator */}
+                  {alert.riskLevel !== 'RESOLVED' && (
+                    <View className="mt-2 pt-3 border-t border-gray-100">
+                      <View className="flex flex-row items-center justify-center py-2 gap-2">
+                        <Ionicons name="eye-outline" size={16} color="#6B7280" />
+                        <Text className="text-gray-600 text-sm font-medium">
+                          Tap to view full details
+                        </Text>
+                        <Ionicons name="chevron-forward-outline" size={14} color="#9CA3AF" />
+                      </View>
+                    </View>
+                  )}
+                </View>
               </View>
-              
-              <TouchableOpacity 
-                className="bg-red-600 py-4 px-8 rounded-lg mb-3"
-                onPress={() => {/* Handle emergency call */}}
-              >
-                <View className="flex-row items-center justify-center">
-                  <Ionicons name="call" size={20} color="#FFFFFF" />
-                  <Text className="text-white text-lg font-bold ml-2">
-                    Call 108
-                  </Text>
+            </TouchableOpacity>
+          ))}          
+          
+          {/* Emergency Contact Section */}
+          <TouchableOpacity 
+            className="mt-6 bg-white p-4 rounded-xl border border-gray-200 shadow-sm"
+            onPress={() => {/* Handle emergency call */}}
+            activeOpacity={0.8}
+          >
+            <View className="flex flex-row items-center justify-between">
+              <View className="flex flex-row items-center gap-4">
+                <View className="bg-red-100 p-3 rounded-xl">
+                  <Ionicons name="call" size={24} color="#DC2626" />
                 </View>
-              </TouchableOpacity>
-              
-              <Text className="text-red-600 text-sm text-center">
-                National Emergency Helpline - Available 24/7
-              </Text>
+                <View className="flex flex-col gap-1">
+                  <Text className="font-bold text-gray-900 text-lg">Emergency: 108</Text>
+                  <Text className="text-xs text-gray-600">24/7 National Medical Helpline</Text>
+                </View>
+              </View>
+              <View className="bg-red-600 px-5 py-3 rounded-xl shadow-sm">
+                <Text className="text-white font-bold text-sm">CALL NOW</Text>
+              </View>
             </View>
-          </View>
-
+          </TouchableOpacity>
+          
           {/* Info Section */}
             <View className="bg-blue-50 p-4 mt-6 rounded-lg">
               <View className="flex-row items-center mb-3">
@@ -268,6 +289,13 @@ export default function AlertsPage() {
             </View>
           </View>
       </ScrollView>
+
+      {/* Alert Details Modal */}
+      <AlertDetailsModal
+        visible={showDetails}
+        alert={selectedAlert}
+        onClose={() => setShowDetails(false)}
+      />
     </View>
   );
 }
