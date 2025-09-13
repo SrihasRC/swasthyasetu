@@ -1,9 +1,22 @@
-import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { Tabs, usePathname } from "expo-router";
 
-export default function _layout() {
+export default function TabsLayout() {
+  const pathname = usePathname();
+  
+  // Hide tab bar on form screens
+  const hideTabBar = pathname.includes('/water') || 
+                     pathname.includes('/symptoms') || 
+                     pathname.includes('/quick-scan');
+
   return (
-    <Tabs screenOptions={{ tabBarActiveTintColor: "black", tabBarInactiveTintColor: "gray" }}>
+    <Tabs 
+      screenOptions={{ 
+        tabBarActiveTintColor: "black", 
+        tabBarInactiveTintColor: "gray",
+        tabBarStyle: hideTabBar ? { display: 'none' } : undefined
+      }}
+    >
       <Tabs.Screen
         name="home"
         options={{
