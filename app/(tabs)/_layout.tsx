@@ -14,14 +14,14 @@ export default function TabsLayout() {
       screenOptions={{ 
         tabBarActiveTintColor: "black", 
         tabBarInactiveTintColor: "gray",
-        tabBarStyle: hideTabBar ? { display: 'none' } : undefined
+        tabBarStyle: hideTabBar ? { display: 'none' } : undefined,
+        headerShown: false
       }}
     >
       <Tabs.Screen
         name="home"
         options={{
           title: "Home",
-          headerShown: false,
           popToTopOnBlur: true,
           tabBarIcon: ({color, size}) => <Ionicons name="home" size={size} color={color} />,
         }}
