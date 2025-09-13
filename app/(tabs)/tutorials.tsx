@@ -147,7 +147,7 @@ export default function TutorialsScreen() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <View className="px-6 py-6 flex flex-col gap-6">
+        <View className="px-5 py-5 flex flex-col gap-5">
           
           {/* Categories Section */}
           <View>
@@ -162,33 +162,34 @@ export default function TutorialsScreen() {
                   activeOpacity={0.8}
                 >
                   <View 
-                    className="bg-white rounded-xl p-5 shadow-sm border border-gray-100"
+                    className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 h-36"
                     style={{ backgroundColor: category.bgColor }}
                   >
-                    <View className="flex flex-col items-center gap-3">
+                    <View className="flex flex-col items-center justify-center h-full gap-2">
                       <View 
-                        className="w-12 h-12 rounded-xl flex items-center justify-center"
+                        className="w-10 h-10 rounded-lg flex items-center justify-center"
                         style={{ backgroundColor: category.color }}
                       >
                         <Ionicons 
                           name={category.icon} 
-                          size={24} 
+                          size={20} 
                           color="white" 
                         />
                       </View>
                       
                       <View className="flex flex-col items-center gap-1">
                         <Text 
-                          className="font-bold text-center text-base"
+                          className="font-bold text-center text-sm leading-tight"
                           style={{ color: category.color }}
+                          numberOfLines={2}
                         >
                           {category.title}
                         </Text>
-                        <Text className="text-gray-600 text-sm text-center">
+                        <Text className="text-gray-600 text-xs text-center leading-tight" numberOfLines={2}>
                           {category.description}
                         </Text>
-                        <View className="flex flex-row items-center gap-1 mt-1">
-                          <Ionicons name="book-outline" size={12} color="#6B7280" />
+                        <View className="flex flex-row items-center gap-1">
+                          <Ionicons name="book-outline" size={10} color="#6B7280" />
                           <Text className="text-gray-500 text-xs font-medium">
                             {category.count} guides
                           </Text>
@@ -224,7 +225,7 @@ export default function TutorialsScreen() {
                     <View className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
                       <Ionicons 
                         name={getTypeIcon(guide.type)} 
-                        size={24} 
+                        size={22} 
                         color={getTypeColor(guide.type)} 
                       />
                     </View>
@@ -260,7 +261,7 @@ export default function TutorialsScreen() {
                     </View>
 
                     {/* Arrow */}
-                    <Ionicons name="chevron-forward-outline" size={20} color="#9CA3AF" />
+                    <Ionicons name="chevron-forward-outline" size={18} color="#9CA3AF" />
                   </View>
                 </TouchableOpacity>
               ))}
@@ -268,28 +269,28 @@ export default function TutorialsScreen() {
           </View>
 
           {/* Quick Actions */}
-          <View className="bg-blue-50 rounded-xl p-6 border border-blue-100">
-            <View className="flex flex-row items-center gap-3 mb-4">
+          <View className="bg-blue-50 rounded-xl p-4 border border-blue-100">
+            <View className="flex flex-row items-center gap-3 mb-3">
               <View className="bg-blue-100 p-2 rounded-lg">
-                <Ionicons name="bulb-outline" size={20} color="#1E40AF" />
+                <Ionicons name="bulb-outline" size={18} color="#1E40AF" />
               </View>
-              <Text className="text-blue-900 font-bold text-lg">
+              <Text className="text-blue-900 font-bold text-base">
                 Quick Access
               </Text>
             </View>
             
-            <View className="flex flex-col gap-3">
+            <View className="flex flex-col gap-2">
               <TouchableOpacity className="flex flex-row items-center gap-3 py-2">
-                <Ionicons name="download-outline" size={20} color="#1E40AF" />
-                <Text className="text-blue-800 font-semibold flex-1">
+                <Ionicons name="download-outline" size={18} color="#1E40AF" />
+                <Text className="text-blue-800 font-medium flex-1 text-sm">
                   Download for Offline
                 </Text>
-                <Ionicons name="chevron-forward-outline" size={16} color="#1E40AF" />
+                <Ionicons name="chevron-forward-outline" size={14} color="#1E40AF" />
               </TouchableOpacity>
               
               <TouchableOpacity className="flex flex-row items-center gap-3 py-2">
-                <Ionicons name="bookmark-outline" size={20} color="#1E40AF" />
-                <Text className="text-blue-800 font-semibold flex-1">
+                <Ionicons name="bookmark-outline" size={18} color="#1E40AF" />
+                <Text className="text-blue-800 font-medium flex-1 text-sm">
                   My Bookmarks
                 </Text>
                 <View className="bg-blue-200 px-2 py-1 rounded-full">
@@ -298,11 +299,11 @@ export default function TutorialsScreen() {
               </TouchableOpacity>
               
               <TouchableOpacity className="flex flex-row items-center gap-3 py-2">
-                <Ionicons name="language-outline" size={20} color="#1E40AF" />
-                <Text className="text-blue-800 font-semibold flex-1">
+                <Ionicons name="language-outline" size={18} color="#1E40AF" />
+                <Text className="text-blue-800 font-medium flex-1 text-sm">
                   Change Language
                 </Text>
-                <Text className="text-blue-600 text-sm">English</Text>
+                <Text className="text-blue-600 text-xs">English</Text>
               </TouchableOpacity>
             </View>
           </View>
