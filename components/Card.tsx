@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { useAppTheme } from './ThemeProvider';
 
 interface CardProps {
   children: React.ReactNode;
@@ -18,16 +19,30 @@ export default function Card({
   title,
   subtitle
 }: CardProps) {
+  const { colors } = useAppTheme();
+  
   const getVariantStyles = () => {
     switch (variant) {
       case 'elevated':
-        return 'bg-white border border-gray-100';
+        return {
+          backgroundColor: colors.card,
+          borderColor: colors.border,
+        };
       case 'flat':
-        return 'bg-gray-50 border border-gray-200';
+        return {
+          backgroundColor: colors.muted,
+          borderColor: colors.border,
+        };
       case 'interactive':
-        return 'bg-white border border-gray-200 active:scale-98';
+        return {
+          backgroundColor: colors.card,
+          borderColor: colors.border,
+        };
       default:
-        return 'bg-white border border-gray-100';
+        return {
+          backgroundColor: colors.card,
+          borderColor: colors.border,
+        };
     }
   };
 
@@ -46,18 +61,32 @@ export default function Card({
     }
   };
 
+  const cardStyles = getVariantStyles();
+
   const CardContent = () => (
-    <View className={`rounded-xl ${getVariantStyles()} ${getPaddingStyles()}`} 
-          style={{ elevation: variant === 'elevated' ? 2 : 0 }}>
+    <View 
+      className={`rounded-xl border ${getPaddingStyles()} ${variant === 'interactive' ? 'active:scale-98' : ''}`}
+      style={{ 
+        backgroundColor: cardStyles.backgroundColor,
+        borderColor: cardStyles.borderColor,
+        elevation: variant === 'elevated' ? 2 : 0 
+      }}
+    >
       {(title || subtitle) && (
         <View className="mb-3">
           {title && (
-            <Text className="text-lg font-semibold text-gray-900 mb-1">
+            <Text 
+              className="text-lg font-semibold mb-1"
+              style={{ color: colors.foreground }}
+            >
               {title}
             </Text>
           )}
           {subtitle && (
-            <Text className="text-sm text-gray-600">
+            <Text 
+              className="text-sm"
+              style={{ color: colors.mutedForeground }}
+            >
               {subtitle}
             </Text>
           )}

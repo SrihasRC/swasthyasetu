@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { TutorialDetailModalProps, TutorialGuide } from '../types/tutorial';
+import { useAppTheme } from './ThemeProvider';
 
 export default function TutorialDetailModal({
   visible,
@@ -11,6 +12,8 @@ export default function TutorialDetailModal({
   onShare,
   onDownload
 }: TutorialDetailModalProps) {
+  const { colors } = useAppTheme();
+  
   const getTypeIcon = (type: TutorialGuide['type']) => {
     switch (type) {
       case 'video': return 'play-circle-outline';
@@ -22,10 +25,10 @@ export default function TutorialDetailModal({
 
   const getTypeColor = (type: TutorialGuide['type']) => {
     switch (type) {
-      case 'video': return '#DC2626';
-      case 'article': return '#1E40AF';
-      case 'checklist': return '#059669';
-      default: return '#6B7280';
+      case 'video': return colors.error;
+      case 'article': return colors.primary;
+      case 'checklist': return colors.success;
+      default: return colors.mutedForeground;
     }
   };
 
@@ -117,29 +120,38 @@ export default function TutorialDetailModal({
       presentationStyle="pageSheet"
       onRequestClose={onClose}
     >
-      <View className="flex-1 bg-gray-50">
+      <View className="flex-1" style={{ backgroundColor: colors.background }}>
         {/* Header */}
-        <View className="bg-white px-6 py-4 flex flex-row items-center justify-between shadow-sm border-b border-gray-100">
+        <View 
+          className="px-6 py-4 flex flex-row items-center justify-between shadow-sm border-b"
+          style={{ 
+            backgroundColor: colors.card,
+            borderColor: colors.border,
+          }}
+        >
           <TouchableOpacity
             onPress={onClose}
-            className="p-2 rounded-full bg-gray-100 active:bg-gray-200"
+            className="p-2 rounded-full active:opacity-80"
+            style={{ backgroundColor: colors.muted }}
           >
-            <Ionicons name="close" size={22} color="#374151" />
+            <Ionicons name="close" size={22} color={colors.foreground} />
           </TouchableOpacity>
           
           <View className="flex flex-row items-center gap-3">
             <TouchableOpacity
               onPress={handleBookmark}
-              className="p-2 rounded-full bg-gray-100 active:bg-gray-200"
+              className="p-2 rounded-full active:opacity-80"
+              style={{ backgroundColor: colors.muted }}
             >
-              <Ionicons name="bookmark-outline" size={20} color="#374151" />
+              <Ionicons name="bookmark-outline" size={20} color={colors.foreground} />
             </TouchableOpacity>
             
             <TouchableOpacity
               onPress={handleShare}
-              className="p-2 rounded-full bg-gray-100 active:bg-gray-200"
+              className="p-2 rounded-full active:opacity-80"
+              style={{ backgroundColor: colors.muted }}
             >
-              <Ionicons name="share-outline" size={20} color="#374151" />
+              <Ionicons name="share-outline" size={20} color={colors.foreground} />
             </TouchableOpacity>
           </View>
         </View>
@@ -148,7 +160,10 @@ export default function TutorialDetailModal({
           <View className="px-6 py-6 flex flex-col gap-6">
             
             {/* Title & Type Section */}
-            <View className="bg-white rounded-xl p-6 shadow-sm">
+            <View 
+              className="rounded-xl p-6 shadow-sm"
+              style={{ backgroundColor: colors.card }}
+            >
               <View className="flex flex-row items-center gap-4 mb-4">
                 <View 
                   className="w-16 h-16 rounded-xl flex items-center justify-center"
@@ -162,24 +177,37 @@ export default function TutorialDetailModal({
                 </View>
                 
                 <View className="flex-1">
-                  <Text className="text-2xl font-bold text-gray-900 leading-8">
+                  <Text 
+                    className="text-2xl font-bold leading-8"
+                    style={{ color: colors.foreground }}
+                  >
                     {guide.title}
                   </Text>
                   <View className="flex flex-row items-center gap-4 mt-2">
                     <View className="flex flex-row items-center gap-1">
-                      <Ionicons name="time-outline" size={16} color="#6B7280" />
-                      <Text className="text-gray-600 font-medium">{guide.duration}</Text>
+                      <Ionicons name="time-outline" size={16} color={colors.mutedForeground} />
+                      <Text 
+                        className="font-medium"
+                        style={{ color: colors.mutedForeground }}
+                      >
+                        {guide.duration}
+                      </Text>
                     </View>
                     <View className="flex flex-row items-center gap-1">
-                      <Ionicons name="folder-outline" size={16} color="#6B7280" />
-                      <Text className="text-gray-600">{guide.category}</Text>
+                      <Ionicons name="folder-outline" size={16} color={colors.mutedForeground} />
+                      <Text style={{ color: colors.mutedForeground }}>
+                        {guide.category}
+                      </Text>
                     </View>
                   </View>
                 </View>
               </View>
               
               {guide.type === 'video' && (
-                <TouchableOpacity className="bg-red-600 py-4 px-6 rounded-xl flex flex-row items-center justify-center gap-3 active:bg-red-700">
+                <TouchableOpacity 
+                  className="py-4 px-6 rounded-xl flex flex-row items-center justify-center gap-3 active:opacity-80"
+                  style={{ backgroundColor: colors.error }}
+                >
                   <Ionicons name="play" size={24} color="white" />
                   <Text className="text-white font-bold text-lg">Play Video</Text>
                 </TouchableOpacity>
@@ -187,61 +215,128 @@ export default function TutorialDetailModal({
             </View>
 
             {/* Steps Section */}
-            <View className="bg-white rounded-xl p-6 shadow-sm">
-              <Text className="text-xl font-bold text-gray-900 mb-4">
+            <View 
+              className="rounded-xl p-6 shadow-sm"
+              style={{ backgroundColor: colors.card }}
+            >
+              <Text 
+                className="text-lg font-bold mb-4"
+                style={{ color: colors.foreground }}
+              >
                 {guide.type === 'checklist' ? 'Checklist' : 'Steps'}
               </Text>
               
               <View className="flex flex-col gap-3">
                 {content.steps.map((step, index) => (
                   <View key={index} className="flex flex-row items-start gap-3">
-                    <View className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mt-1">
-                      <Text className="text-blue-600 font-bold text-sm">{index + 1}</Text>
+                    <View 
+                      className="w-6 h-6 rounded-full flex items-center justify-center mt-1"
+                      style={{ backgroundColor: colors.primary + '20' }}
+                    >
+                      <Text 
+                        className="font-bold text-sm"
+                        style={{ color: colors.primary }}
+                      >
+                        {index + 1}
+                      </Text>
                     </View>
-                    <Text className="flex-1 text-gray-700 leading-6">{step}</Text>
+                    <Text 
+                      className="flex-1 leading-6"
+                      style={{ color: colors.mutedForeground }}
+                    >
+                      {step}
+                    </Text>
                   </View>
                 ))}
               </View>
             </View>
 
             {/* Important Tips */}
-            <View className="bg-amber-50 rounded-xl p-6 border border-amber-200">
+            <View 
+              className="rounded-xl p-6 border"
+              style={{ 
+                backgroundColor: colors.warning + '10',
+                borderColor: colors.warning + '30',
+              }}
+            >
               <View className="flex flex-row items-center gap-3 mb-4">
-                <View className="bg-amber-100 p-2 rounded-lg">
-                  <Ionicons name="bulb-outline" size={20} color="#D97706" />
+                <View 
+                  className="p-2 rounded-lg"
+                  style={{ backgroundColor: colors.warning + '20' }}
+                >
+                  <Ionicons name="bulb-outline" size={20} color={colors.warning} />
                 </View>
-                <Text className="text-amber-900 font-bold text-lg">Important Tips</Text>
+                <Text 
+                  className="font-bold text-lg"
+                  style={{ color: colors.warning }}
+                >
+                  Important Tips
+                </Text>
               </View>
               
               <View className="flex flex-col gap-3">
                 {content.tips.map((tip, index) => (
                   <View key={index} className="flex flex-row items-start gap-3">
-                    <View className="w-2 h-2 bg-amber-600 rounded-full mt-2" />
-                    <Text className="flex-1 text-amber-800 leading-6">{tip}</Text>
+                    <View 
+                      className="w-2 h-2 rounded-full mt-2"
+                      style={{ backgroundColor: colors.warning }}
+                    />
+                    <Text 
+                      className="flex-1 leading-6"
+                      style={{ color: colors.warning }}
+                    >
+                      {tip}
+                    </Text>
                   </View>
                 ))}
               </View>
             </View>
 
             {/* Tags */}
-            <View className="bg-white rounded-xl p-6 shadow-sm">
-              <Text className="text-lg font-bold text-gray-900 mb-3">Related Topics</Text>
+            <View 
+              className="rounded-xl p-6 shadow-sm"
+              style={{ backgroundColor: colors.card }}
+            >
+              <Text 
+                className="text-lg font-bold mb-3"
+                style={{ color: colors.foreground }}
+              >
+                Related Topics
+              </Text>
               <View className="flex flex-row flex-wrap gap-2">
                 {content.tags.map((tag, index) => (
-                  <View key={index} className="bg-blue-100 px-3 py-2 rounded-full">
-                    <Text className="text-blue-700 font-medium text-sm">{tag}</Text>
+                  <View 
+                    key={index} 
+                    className="px-3 py-2 rounded-full"
+                    style={{ backgroundColor: colors.primary + '20' }}
+                  >
+                    <Text 
+                      className="font-medium text-sm"
+                      style={{ color: colors.primary }}
+                    >
+                      {tag}
+                    </Text>
                   </View>
                 ))}
               </View>
             </View>
 
             {/* Action Buttons */}
-            <View className="bg-white rounded-xl p-6 shadow-sm">
-              <Text className="text-lg font-bold text-gray-900 mb-4">Quick Actions</Text>
+            <View 
+              className="rounded-xl p-6 shadow-sm"
+              style={{ backgroundColor: colors.card }}
+            >
+              <Text 
+                className="text-lg font-bold mb-4"
+                style={{ color: colors.foreground }}
+              >
+                Quick Actions
+              </Text>
               
               <View className="flex flex-col gap-3">
                 <TouchableOpacity 
-                  className="bg-green-600 py-4 px-6 rounded-xl flex flex-row items-center justify-center gap-3 active:bg-green-700"
+                  className="py-4 px-6 rounded-xl flex flex-row items-center justify-center gap-3 active:opacity-80"
+                  style={{ backgroundColor: colors.success }}
                   onPress={handleDownload}
                 >
                   <Ionicons name="download-outline" size={22} color="white" />
@@ -249,11 +344,17 @@ export default function TutorialDetailModal({
                 </TouchableOpacity>
 
                 <TouchableOpacity 
-                  className="border-2 border-gray-200 py-4 px-6 rounded-xl flex flex-row items-center justify-center gap-3 active:bg-gray-50"
+                  className="py-4 px-6 rounded-xl flex flex-row items-center justify-center gap-3 active:opacity-80 border-2"
+                  style={{ borderColor: colors.border }}
                   onPress={handleShare}
                 >
-                  <Ionicons name="share-outline" size={22} color="#374151" />
-                  <Text className="text-gray-700 font-bold text-base">Share with Team</Text>
+                  <Ionicons name="share-outline" size={22} color={colors.foreground} />
+                  <Text 
+                    className="font-bold text-base"
+                    style={{ color: colors.foreground }}
+                  >
+                    Share with Team
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>

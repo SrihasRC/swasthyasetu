@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Text, TextInput, TextInputProps, View } from 'react-native';
+import { useAppTheme } from './ThemeProvider';
 
 interface InputProps extends TextInputProps {
   label: string;
@@ -20,6 +21,8 @@ export default function Input({
   helper,
   ...textInputProps 
 }: InputProps) {
+  const { colors } = useAppTheme();
+  
   const getKeyboardType = () => {
     switch (type) {
       case 'email':
@@ -36,27 +39,32 @@ export default function Input({
   return (
     <View className="mb-4">
       {/* Label */}
-      <Text className="text-gray-700 font-medium mb-2 text-base">
+      <Text 
+        className="font-medium mb-2 text-base"
+        style={{ color: colors.foreground }}
+      >
         {label}
-        {required && <Text className="text-red-500 ml-1">*</Text>}
+        {required && (
+          <Text style={{ color: colors.error }} className="ml-1">*</Text>
+        )}
       </Text>
       
       {/* Input Container */}
       <View className="relative">
         {icon && (
           <View className="absolute left-3 top-4 z-10">
-            <Ionicons name={icon} size={20} color="#6B7280" />
+            <Ionicons name={icon} size={20} color={colors.mutedForeground} />
           </View>
         )}
         
         <TextInput
-          className={`
-            border rounded-xl px-4 py-4 text-gray-900 bg-white text-base min-h-[52px]
-            ${icon ? 'pl-12' : 'px-4'}
-            ${error ? 'border-red-300 bg-red-50' : 'border-gray-300'}
-            focus:border-blue-500
-          `}
-          placeholderTextColor="#9CA3AF"
+          className={`border rounded-xl py-4 text-base min-h-[52px] ${icon ? 'pl-12 pr-4' : 'px-4'}`}
+          style={{
+            backgroundColor: error ? colors.error + '10' : colors.card,
+            borderColor: error ? colors.error : colors.border,
+            color: colors.foreground,
+          }}
+          placeholderTextColor={colors.mutedForeground}
           keyboardType={getKeyboardType()}
           {...textInputProps}
         />
@@ -64,7 +72,10 @@ export default function Input({
       
       {/* Helper Text */}
       {helper && !error && (
-        <Text className="text-gray-500 text-sm mt-1">
+        <Text 
+          className="text-sm mt-1"
+          style={{ color: colors.mutedForeground }}
+        >
           {helper}
         </Text>
       )}
@@ -72,8 +83,11 @@ export default function Input({
       {/* Error Message */}
       {error && (
         <View className="flex-row items-center mt-1">
-          <Ionicons name="alert-circle" size={16} color="#DC2626" />
-          <Text className="text-red-500 text-sm ml-1">
+          <Ionicons name="alert-circle" size={16} color={colors.error} />
+          <Text 
+            className="text-sm ml-1"
+            style={{ color: colors.error }}
+          >
             {error}
           </Text>
         </View>

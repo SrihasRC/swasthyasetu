@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, View } from 'react-native';
+import { useAppTheme } from './ThemeProvider';
 
 interface ProgressBarProps {
   progress: number; // 0-100
@@ -18,18 +19,20 @@ export default function ProgressBar({
   color = 'blue',
   size = 'medium'
 }: ProgressBarProps) {
+  const { colors } = useAppTheme();
+  
   const getColorStyles = () => {
     switch (color) {
       case 'blue':
-        return { bg: 'bg-blue-500', container: 'bg-blue-100' };
+        return { bg: colors.primary, container: colors.primary + '20' };
       case 'green':
-        return { bg: 'bg-green-500', container: 'bg-green-100' };
+        return { bg: colors.success, container: colors.success + '20' };
       case 'orange':
-        return { bg: 'bg-orange-500', container: 'bg-orange-100' };
+        return { bg: colors.warning, container: colors.warning + '20' };
       case 'red':
-        return { bg: 'bg-red-500', container: 'bg-red-100' };
+        return { bg: colors.error, container: colors.error + '20' };
       default:
-        return { bg: 'bg-blue-500', container: 'bg-blue-100' };
+        return { bg: colors.primary, container: colors.primary + '20' };
     }
   };
 
@@ -53,24 +56,39 @@ export default function ProgressBar({
     <View className="w-full">
       {showLabels && (total && current) && (
         <View className="flex-row justify-between items-center mb-2">
-          <Text className="text-sm font-medium text-gray-700">
+          <Text 
+            className="text-sm font-medium"
+            style={{ color: colors.foreground }}
+          >
             Step {current} of {total}
           </Text>
-          <Text className="text-sm text-gray-600">
+          <Text 
+            className="text-sm"
+            style={{ color: colors.mutedForeground }}
+          >
             {Math.round(clampedProgress)}%
           </Text>
         </View>
       )}
       
-      <View className={`w-full ${getSizeStyles()} ${colorStyles.container} rounded-full overflow-hidden`}>
+      <View 
+        className={`w-full ${getSizeStyles()} rounded-full overflow-hidden`}
+        style={{ backgroundColor: colorStyles.container }}
+      >
         <View 
-          className={`h-full ${colorStyles.bg} rounded-full`}
-          style={{ width: `${clampedProgress}%` }}
+          className="h-full rounded-full"
+          style={{ 
+            backgroundColor: colorStyles.bg,
+            width: `${clampedProgress}%` 
+          }}
         />
       </View>
       
       {showLabels && !(total && current) && (
-        <Text className="text-xs text-gray-600 mt-1 text-center">
+        <Text 
+          className="text-xs mt-1 text-center"
+          style={{ color: colors.mutedForeground }}
+        >
           {Math.round(clampedProgress)}% Complete
         </Text>
       )}

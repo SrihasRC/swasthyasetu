@@ -1,5 +1,6 @@
 import React from 'react';
 import { ActivityIndicator, Text, TouchableOpacity } from 'react-native';
+import { useAppTheme } from './ThemeProvider';
 
 interface ButtonProps {
   title: string;
@@ -18,29 +19,43 @@ export default function Button({
   loading = false,
   size = 'medium'
 }: ButtonProps) {
+  const { colors } = useAppTheme();
+  
   const getVariantStyles = () => {
     switch (variant) {
       case 'primary':
-        return 'bg-blue-600 border-blue-700';
+        return {
+          backgroundColor: colors.primary,
+          borderColor: colors.primary,
+        };
       case 'secondary':
-        return 'bg-gray-100 border-gray-300';
+        return {
+          backgroundColor: colors.muted,
+          borderColor: colors.border,
+        };
       case 'danger':
-        return 'bg-red-600 border-red-700';
+        return {
+          backgroundColor: colors.error,
+          borderColor: colors.error,
+        };
       default:
-        return 'bg-blue-600 border-blue-700';
+        return {
+          backgroundColor: colors.primary,
+          borderColor: colors.primary,
+        };
     }
   };
 
-  const getTextStyles = () => {
+  const getTextColor = () => {
     switch (variant) {
       case 'primary':
-        return 'text-white';
+        return '#FFFFFF';
       case 'secondary':
-        return 'text-gray-900';
+        return colors.foreground;
       case 'danger':
-        return 'text-white';
+        return '#FFFFFF';
       default:
-        return 'text-white';
+        return '#FFFFFF';
     }
   };
 
@@ -70,26 +85,30 @@ export default function Button({
     }
   };
 
+  const buttonStyles = getVariantStyles();
+
   return (
     <TouchableOpacity
       onPress={onPress}
       disabled={disabled || loading}
       activeOpacity={0.8}
-      className={`
-        rounded-lg border items-center justify-center min-h-[48px]
-        ${getVariantStyles()}
-        ${getSizeStyles()}
-        ${disabled || loading ? 'opacity-50' : ''}
-      `}
-      style={{ elevation: disabled ? 0 : 2 }}
+      className={`rounded-lg border items-center justify-center min-h-[48px] ${getSizeStyles()} ${disabled || loading ? 'opacity-50' : ''}`}
+      style={{ 
+        backgroundColor: buttonStyles.backgroundColor,
+        borderColor: buttonStyles.borderColor,
+        elevation: disabled ? 0 : 2 
+      }}
     >
       {loading ? (
         <ActivityIndicator 
           size="small" 
-          color={variant === 'secondary' ? '#374151' : '#FFFFFF'} 
+          color={variant === 'secondary' ? colors.foreground : '#FFFFFF'} 
         />
       ) : (
-        <Text className={`font-medium ${getTextStyles()} ${getTextSize()}`}>
+        <Text 
+          className={`font-medium ${getTextSize()}`}
+          style={{ color: getTextColor() }}
+        >
           {title}
         </Text>
       )}

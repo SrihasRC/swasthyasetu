@@ -8,6 +8,7 @@ import Card from '../../../components/Card';
 import Header from '../../../components/Header';
 import Input from '../../../components/Input';
 import ProgressBar from '../../../components/ProgressBar';
+import { useAppTheme } from '../../../components/ThemeProvider';
 
 interface WaterFormData {
   location: string;
@@ -27,6 +28,7 @@ interface WaterFormData {
 }
 
 export default function WaterQualityPage() {
+  const { colors } = useAppTheme();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<WaterFormData>({
     location: '',
@@ -257,7 +259,7 @@ export default function WaterQualityPage() {
 
   const renderStep1 = () => (
     <ScrollView className="flex-1 p-4" showsVerticalScrollIndicator={false}>
-      <Text className="text-xl font-bold text-gray-900 mb-6">Water Source Information</Text>
+      <Text style={{color: colors.foreground}} className="text-xl font-bold mb-6">Water Source Information</Text>
       
       {/* Location Input */}
       <View className="flex-row gap-3 items-end mb-4">
@@ -291,7 +293,7 @@ export default function WaterQualityPage() {
       </View>
 
       {/* Water Source Type */}
-      <Text className="text-gray-700 font-medium mb-2">
+      <Text style={{color: colors.mutedForeground}} className="font-medium mb-2">
         Water Source Type
         <Text className="text-red-500 ml-1">*</Text>
       </Text>
@@ -304,19 +306,19 @@ export default function WaterQualityPage() {
               setFormData({...formData, sourceType: source.id});
               if (errors.sourceType) setErrors(prev => ({ ...prev, sourceType: '' }));
             }}
-            className={`p-3 rounded-xl border-2 flex-row items-center justify-between ${
-              formData.sourceType === source.id
-                ? 'border-blue-500 bg-blue-50'
-                : 'border-gray-200 bg-white'
-            }`}
+            style={{
+              backgroundColor: formData.sourceType === source.id ? colors.muted : colors.background,
+              borderColor: formData.sourceType === source.id ? colors.primary : colors.border,
+            }}
+            className="p-3 rounded-xl border-2 flex-row items-center justify-between"
           >
-            <Text className={`font-medium ${
-              formData.sourceType === source.id ? 'text-blue-700' : 'text-gray-700'
-            }`}>
+            <Text style={{
+              color: formData.sourceType === source.id ? colors.primary : colors.mutedForeground
+            }} className="font-medium">
               {source.label}
             </Text>
             {formData.sourceType === source.id && (
-              <View className="bg-blue-500 rounded-full w-5 h-5 items-center justify-center">
+              <View style={{backgroundColor: colors.primary}} className="rounded-full w-5 h-5 items-center justify-center">
                 <Ionicons name="checkmark" size={12} color="#FFFFFF" />
               </View>
             )}
@@ -376,7 +378,7 @@ export default function WaterQualityPage() {
 
   const renderStep2 = () => (
     <ScrollView className="flex-1 p-4" showsVerticalScrollIndicator={false}>
-      <Text className="text-xl font-bold text-gray-900 mb-6">Water Quality Parameters</Text>
+      <Text style={{color: colors.foreground}} className="text-xl font-bold mb-6">Water Quality Parameters</Text>
       
       {/* pH Level */}
       <View className="mb-4">
@@ -534,7 +536,7 @@ export default function WaterQualityPage() {
       />
 
       {/* Smell */}
-      <Text className="text-gray-700 font-medium mb-2">
+      <Text style={{color: colors.mutedForeground}} className="font-medium mb-2">
         Smell/Odor
       </Text>
       <View className="flex flex-col gap-2 mb-4">
@@ -543,19 +545,19 @@ export default function WaterQualityPage() {
             key={option.id}
             activeOpacity={0.8}
             onPress={() => setFormData({...formData, smell: option.id})}
-            className={`p-3 rounded-xl border-2 flex-row items-center justify-between ${
-              formData.smell === option.id
-                ? 'border-blue-500 bg-blue-50'
-                : 'border-gray-200 bg-white'
-            }`}
+            style={{
+              backgroundColor: formData.smell === option.id ? colors.muted : colors.background,
+              borderColor: formData.smell === option.id ? colors.primary : colors.border,
+            }}
+            className="p-3 rounded-xl border-2 flex-row items-center justify-between"
           >
-            <Text className={`font-medium ${
-              formData.smell === option.id ? 'text-blue-700' : 'text-gray-700'
-            }`}>
+            <Text style={{
+              color: formData.smell === option.id ? colors.primary : colors.mutedForeground
+            }} className="font-medium">
               {option.label}
             </Text>
             {formData.smell === option.id && (
-              <View className="bg-blue-500 rounded-full w-5 h-5 items-center justify-center">
+              <View style={{backgroundColor: colors.primary}} className="rounded-full w-5 h-5 items-center justify-center">
                 <Ionicons name="checkmark" size={12} color="#FFFFFF" />
               </View>
             )}
@@ -564,7 +566,7 @@ export default function WaterQualityPage() {
       </View>
 
       {/* Color */}
-      <Text className="text-gray-700 font-medium mb-2">
+      <Text style={{color: colors.mutedForeground}} className="font-medium mb-2">
         Water Color/Appearance
       </Text>
       <View className="flex flex-col gap-2 mb-4">
@@ -573,19 +575,19 @@ export default function WaterQualityPage() {
             key={option.id}
             activeOpacity={0.8}
             onPress={() => setFormData({...formData, color: option.id})}
-            className={`p-3 rounded-xl border-2 flex-row items-center justify-between ${
-              formData.color === option.id
-                ? 'border-blue-500 bg-blue-50'
-                : 'border-gray-200 bg-white'
-            }`}
+            style={{
+              backgroundColor: formData.color === option.id ? colors.muted : colors.background,
+              borderColor: formData.color === option.id ? colors.primary : colors.border,
+            }}
+            className="p-3 rounded-xl border-2 flex-row items-center justify-between"
           >
-            <Text className={`font-medium ${
-              formData.color === option.id ? 'text-blue-700' : 'text-gray-700'
-            }`}>
+            <Text style={{
+              color: formData.color === option.id ? colors.primary : colors.mutedForeground
+            }} className="font-medium">
               {option.label}
             </Text>
             {formData.color === option.id && (
-              <View className="bg-blue-500 rounded-full w-5 h-5 items-center justify-center">
+              <View style={{backgroundColor: colors.primary}} className="rounded-full w-5 h-5 items-center justify-center">
                 <Ionicons name="checkmark" size={12} color="#FFFFFF" />
               </View>
             )}
@@ -594,7 +596,7 @@ export default function WaterQualityPage() {
       </View>
 
       {/* Taste */}
-      <Text className="text-gray-700 font-medium mb-2">
+      <Text style={{color: colors.mutedForeground}} className="font-medium mb-2">
         Taste
       </Text>
       <View className="flex flex-col gap-2 mb-6">
@@ -603,19 +605,19 @@ export default function WaterQualityPage() {
             key={option.id}
             activeOpacity={0.8}
             onPress={() => setFormData({...formData, taste: option.id})}
-            className={`p-3 rounded-xl border-2 flex-row items-center justify-between ${
-              formData.taste === option.id
-                ? 'border-blue-500 bg-blue-50'
-                : 'border-gray-200 bg-white'
-            }`}
+            style={{
+              backgroundColor: formData.taste === option.id ? colors.muted : colors.background,
+              borderColor: formData.taste === option.id ? colors.primary : colors.border,
+            }}
+            className="p-3 rounded-xl border-2 flex-row items-center justify-between"
           >
-            <Text className={`font-medium ${
-              formData.taste === option.id ? 'text-blue-700' : 'text-gray-700'
-            }`}>
+            <Text style={{
+              color: formData.taste === option.id ? colors.primary : colors.mutedForeground
+            }} className="font-medium">
               {option.label}
             </Text>
             {formData.taste === option.id && (
-              <View className="bg-blue-500 rounded-full w-5 h-5 items-center justify-center">
+              <View style={{backgroundColor: colors.primary}} className="rounded-full w-5 h-5 items-center justify-center">
                 <Ionicons name="checkmark" size={12} color="#FFFFFF" />
               </View>
             )}
@@ -627,34 +629,34 @@ export default function WaterQualityPage() {
 
   const renderStep3 = () => (
     <ScrollView className="flex-1 p-4" showsVerticalScrollIndicator={false}>
-      <Text className="text-xl font-bold text-gray-900 mb-6">Review & Submit</Text>
+      <Text style={{color: colors.foreground}} className="text-xl font-bold mb-6">Review & Submit</Text>
       
       <Card variant="elevated" title="Water Quality Report Summary">
         <View className="flex flex-col gap-3">
           <View className="flex-row justify-between">
-            <Text className="text-gray-600">Location:</Text>
-            <Text className="font-medium text-gray-900">{formData.location}</Text>
+            <Text style={{color: colors.mutedForeground}}>Location:</Text>
+            <Text style={{color: colors.foreground}} className="font-medium">{formData.location}</Text>
           </View>
           <View className="flex-row justify-between">
-            <Text className="text-gray-600">Source Type:</Text>
-            <Text className="font-medium text-gray-900 capitalize">
+            <Text style={{color: colors.mutedForeground}}>Source Type:</Text>
+            <Text style={{color: colors.foreground}} className="font-medium capitalize">
               {waterSources.find(s => s.id === formData.sourceType)?.label}
             </Text>
           </View>
           <View className="flex-row justify-between">
-            <Text className="text-gray-600">Collector:</Text>
-            <Text className="font-medium text-gray-900">{formData.collectorName}</Text>
+            <Text style={{color: colors.mutedForeground}}>Collector:</Text>
+            <Text style={{color: colors.foreground}} className="font-medium">{formData.collectorName}</Text>
           </View>
           <View className="flex-row justify-between">
-            <Text className="text-gray-600">Collection Date:</Text>
-            <Text className="font-medium text-gray-900">{formData.collectionDate}</Text>
+            <Text style={{color: colors.mutedForeground}}>Collection Date:</Text>
+            <Text style={{color: colors.foreground}} className="font-medium">{formData.collectionDate}</Text>
           </View>
           
-          <View className="border-t border-gray-200 pt-3 mt-3">
-            <Text className="text-gray-700 font-medium mb-2">Test Results:</Text>
+          <View style={{borderTopColor: colors.border}} className="border-t pt-3 mt-3">
+            <Text style={{color: colors.foreground}} className="font-medium mb-2">Test Results:</Text>
             <View className="flex flex-col gap-2">
               <View className="flex-row justify-between">
-                <Text className="text-gray-600">pH Level:</Text>
+                <Text style={{color: colors.mutedForeground}}>pH Level:</Text>
                 <Text className={`font-medium ${
                   parseFloat(formData.pH) >= 6.5 && parseFloat(formData.pH) <= 8.5
                     ? 'text-green-600' : 'text-red-600'
@@ -663,15 +665,15 @@ export default function WaterQualityPage() {
                 </Text>
               </View>
               <View className="flex-row justify-between">
-                <Text className="text-gray-600">Turbidity:</Text>
-                <Text className="font-medium text-gray-900">{formData.turbidity} NTU</Text>
+                <Text style={{color: colors.mutedForeground}}>Turbidity:</Text>
+                <Text style={{color: colors.foreground}} className="font-medium">{formData.turbidity} NTU</Text>
               </View>
               <View className="flex-row justify-between">
-                <Text className="text-gray-600">Free Chlorine:</Text>
-                <Text className="font-medium text-gray-900">{formData.chlorine} mg/L</Text>
+                <Text style={{color: colors.mutedForeground}}>Free Chlorine:</Text>
+                <Text style={{color: colors.foreground}} className="font-medium">{formData.chlorine} mg/L</Text>
               </View>
               <View className="flex-row justify-between">
-                <Text className="text-gray-600">Bacteria Count:</Text>
+                <Text style={{color: colors.mutedForeground}}>Bacteria Count:</Text>
                 <Text className={`font-medium ${
                   parseFloat(formData.bacteria) === 0 ? 'text-green-600' : 'text-red-600'
                 }`}>
@@ -680,24 +682,24 @@ export default function WaterQualityPage() {
               </View>
               {formData.smell && (
                 <View className="flex-row justify-between">
-                  <Text className="text-gray-600">Smell:</Text>
-                  <Text className="font-medium text-gray-900 capitalize">
+                  <Text style={{color: colors.mutedForeground}}>Smell:</Text>
+                  <Text style={{color: colors.foreground}} className="font-medium capitalize">
                     {qualityOptions.smell.find(s => s.id === formData.smell)?.label}
                   </Text>
                 </View>
               )}
               {formData.color && (
                 <View className="flex-row justify-between">
-                  <Text className="text-gray-600">Color:</Text>
-                  <Text className="font-medium text-gray-900 capitalize">
+                  <Text style={{color: colors.mutedForeground}}>Color:</Text>
+                  <Text style={{color: colors.foreground}} className="font-medium capitalize">
                     {qualityOptions.color.find(c => c.id === formData.color)?.label}
                   </Text>
                 </View>
               )}
               {formData.taste && (
                 <View className="flex-row justify-between">
-                  <Text className="text-gray-600">Taste:</Text>
-                  <Text className="font-medium text-gray-900 capitalize">
+                  <Text style={{color: colors.mutedForeground}}>Taste:</Text>
+                  <Text style={{color: colors.foreground}} className="font-medium capitalize">
                     {qualityOptions.taste.find(t => t.id === formData.taste)?.label}
                   </Text>
                 </View>
@@ -730,21 +732,30 @@ export default function WaterQualityPage() {
   );
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View className="flex-1" style={{ backgroundColor: colors.background }}>
       <Header
         title="Water Quality Report"
         showBack
         onBackPress={() => router.back()}
       />
       
-      <View className="px-4 py-3 bg-white border-b border-gray-200">
+      <View 
+        className="px-4 py-3 border-b"
+        style={{ 
+          backgroundColor: colors.card,
+          borderColor: colors.border
+        }}
+      >
         <ProgressBar 
           progress={(currentStep / 3) * 100}
           current={currentStep}
           total={3}
           color="blue"
         />
-        <Text className="text-sm text-gray-600 mt-2 text-center">
+        <Text 
+          className="text-sm mt-2 text-center"
+          style={{ color: colors.mutedForeground }}
+        >
           Step {currentStep} of 3
         </Text>
       </View>
@@ -754,7 +765,7 @@ export default function WaterQualityPage() {
       {currentStep === 3 && renderStep3()}
 
       {/* Navigation Buttons */}
-      <View className="p-4 bg-white border-t border-gray-100">
+      <View style={{backgroundColor: colors.background, borderTopColor: colors.border}} className="p-4 border-t">
         <View className="flex-row gap-3">
           {currentStep > 1 && (
             <View className="flex-1">

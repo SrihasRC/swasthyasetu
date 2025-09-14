@@ -1,54 +1,97 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { useAppTheme } from "../../../components/ThemeProvider";
 import Tile from "../../../components/Tile";
 
 export default function HomePage() {
+  const { colors } = useAppTheme();
+  
   return (
-    <View className="flex-1 bg-gray-50">
+    <View className="flex-1" style={{ backgroundColor: colors.background }}>
       {/* Enhanced Header */}
-      <View className="bg-white px-4 pb-6 pt-12" style={{ elevation: 2 }}>
+      <View 
+        className="px-4 pb-6 pt-12" 
+        style={{ 
+          backgroundColor: colors.card,
+          elevation: 2,
+          shadowColor: colors.foreground,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 4,
+        }}
+      >
         <View className="flex-row justify-between items-center mb-4">
           <View className="flex-1">
-            <Text className="text-2xl font-bold text-blue-700">
+            <Text 
+              className="text-2xl font-bold"
+              style={{ color: colors.primary }}
+            >
               SwasthyaSetu
             </Text>
-            <Text className="text-sm text-gray-600 mt-1">
+            <Text 
+              className="text-sm mt-1"
+              style={{ color: colors.mutedForeground }}
+            >
               स्वास्थ्यसेतु - Bridge to Health
             </Text>
           </View>
           <View className="flex-row space-x-2 gap-2">
-            <TouchableOpacity className="p-2 rounded-full bg-green-100">
-              <Ionicons name="wifi" size={20} color="#059669" />
+            <TouchableOpacity 
+              className="p-2 rounded-full"
+              style={{ backgroundColor: colors.success + '20' }}
+            >
+              <Ionicons name="wifi" size={20} color={colors.success} />
             </TouchableOpacity>
             <Link href="/test-components" asChild>
-              <TouchableOpacity className="p-2 rounded-full bg-purple-100">
-                <Ionicons name="construct-outline" size={20} color="#7C3AED" />
+              <TouchableOpacity 
+                className="p-2 rounded-full"
+                style={{ backgroundColor: colors.secondary + '20' }}
+              >
+                <Ionicons name="construct-outline" size={20} color={colors.secondary} />
               </TouchableOpacity>
             </Link>
             <Link href="/settings" asChild>
-              <TouchableOpacity className="p-2 rounded-full bg-gray-100">
-                <Ionicons name="settings-outline" size={20} color="#374151" />
+              <TouchableOpacity 
+                className="p-2 rounded-full"
+                style={{ backgroundColor: colors.muted }}
+              >
+                <Ionicons name="settings-outline" size={20} color={colors.foreground} />
               </TouchableOpacity>
             </Link>
           </View>
         </View>
         
         {/* Greeting Section */}
-        <View className="bg-blue-50 p-4 rounded-xl border border-blue-100">
-          <Text className="text-lg font-semibold text-blue-900">
+        <View 
+          className="p-4 rounded-xl border"
+          style={{ 
+            backgroundColor: colors.primary + '10',
+            borderColor: colors.primary + '30'
+          }}
+        >
+          <Text 
+            className="text-lg font-semibold"
+            style={{ color: colors.primary }}
+          >
             Good Morning, [Name]
           </Text>
           <View className="flex-row items-center mt-2">
             <View className="flex-row items-center mr-4">
-              <Ionicons name="cloud-offline-outline" size={16} color="#EA580C" />
-              <Text className="text-sm text-orange-600 ml-1">
+              <Ionicons name="cloud-offline-outline" size={16} color={colors.warning} />
+              <Text 
+                className="text-sm ml-1"
+                style={{ color: colors.warning }}
+              >
                 3 pending reports
               </Text>
             </View>
             <View className="flex-row items-center">
-              <Ionicons name="location-outline" size={16} color="#059669" />
-              <Text className="text-sm text-green-600 ml-1">
+              <Ionicons name="location-outline" size={16} color={colors.success} />
+              <Text 
+                className="text-sm ml-1"
+                style={{ color: colors.success }}
+              >
                 Majuli, Assam
               </Text>
             </View>
@@ -58,7 +101,10 @@ export default function HomePage() {
 
       <ScrollView className="flex-1 px-4 py-6" showsVerticalScrollIndicator={false}>
         {/* Quick Actions Header */}
-        <Text className="text-lg font-semibold text-gray-900 mb-4">
+        <Text 
+          className="text-lg font-semibold mb-4"
+          style={{ color: colors.foreground }}
+        >
           Quick Actions
         </Text>
         
@@ -69,7 +115,7 @@ export default function HomePage() {
               <Tile
                 title="Report Case"
                 description="Submit health reports"
-                icon={<Ionicons name="medical-outline" size={32} color="#DC2626" />}
+                icon={<Ionicons name="medical-outline" size={32} color={colors.error} />}
                 onPress={() => {}}
               />
             </Link>
@@ -80,7 +126,7 @@ export default function HomePage() {
               <Tile
                 title="Water Quality"
                 description="Test & report water"
-                icon={<Ionicons name="water-outline" size={32} color="#1E40AF" />}
+                icon={<Ionicons name="water-outline" size={32} color={colors.primary} />}
                 onPress={() => {}}
               />
             </Link>
@@ -91,7 +137,7 @@ export default function HomePage() {
               <Tile
                 title="Alerts"
                 description="Community warnings"
-                icon={<Ionicons name="warning-outline" size={32} color="#EA580C" />}
+                icon={<Ionicons name="warning-outline" size={32} color={colors.warning} />}
                 onPress={() => {}}
               />
             </Link>
@@ -102,7 +148,7 @@ export default function HomePage() {
               <Tile
                 title="Learn & Guide"
                 description="Health education"
-                icon={<Ionicons name="library-outline" size={32} color="#059669" />}
+                icon={<Ionicons name="library-outline" size={32} color={colors.success} />}
                 onPress={() => {}}
               />
             </Link>
@@ -110,32 +156,82 @@ export default function HomePage() {
         </View>
 
         {/* Today's Summary */}
-        <Text className="text-lg font-semibold text-gray-900 mb-4">
+        <Text 
+          className="text-lg font-semibold mb-4"
+          style={{ color: colors.foreground }}
+        >
           Today&apos;s Summary
         </Text>
-        <View className="bg-white p-4 rounded-xl border border-gray-100 mb-6" style={{ elevation: 1 }}>
+        <View 
+          className="p-4 rounded-xl border mb-6" 
+          style={{ 
+            backgroundColor: colors.card,
+            borderColor: colors.border,
+            elevation: 1 
+          }}
+        >
           <View className="flex-row justify-between items-center">
             <View className="flex-1 items-center">
-              <Text className="text-2xl font-bold text-blue-600">5</Text>
-              <Text className="text-sm text-gray-600">Reports</Text>
+              <Text 
+                className="text-2xl font-bold"
+                style={{ color: colors.primary }}
+              >
+                5
+              </Text>
+              <Text 
+                className="text-sm"
+                style={{ color: colors.mutedForeground }}
+              >
+                Reports
+              </Text>
             </View>
-            <View className="w-px h-8 bg-gray-200" />
+            <View 
+              className="w-px h-8"
+              style={{ backgroundColor: colors.border }}
+            />
             <View className="flex-1 items-center">
-              <Text className="text-2xl font-bold text-orange-600">2</Text>
-              <Text className="text-sm text-gray-600">Alerts</Text>
+              <Text 
+                className="text-2xl font-bold"
+                style={{ color: colors.warning }}
+              >
+                2
+              </Text>
+              <Text 
+                className="text-sm"
+                style={{ color: colors.mutedForeground }}
+              >
+                Alerts
+              </Text>
             </View>
-            <View className="w-px h-8 bg-gray-200" />
+            <View 
+              className="w-px h-8"
+              style={{ backgroundColor: colors.border }}
+            />
             <View className="flex-1 items-center">
-              <Text className="text-2xl font-bold text-green-600">8</Text>
-              <Text className="text-sm text-gray-600">Resolved</Text>
+              <Text 
+                className="text-2xl font-bold"
+                style={{ color: colors.success }}
+              >
+                8
+              </Text>
+              <Text 
+                className="text-sm"
+                style={{ color: colors.mutedForeground }}
+              >
+                Resolved
+              </Text>
             </View>
           </View>
         </View>
 
         {/* Emergency Quick Report */}
         <TouchableOpacity 
-          className="bg-red-600 p-4 rounded-xl border border-red-700 mb-4"
-          style={{ elevation: 2 }}
+          className="p-4 rounded-xl border mb-4"
+          style={{ 
+            backgroundColor: colors.error,
+            borderColor: colors.error,
+            elevation: 2 
+          }}
         >
           <View className="flex-row items-center justify-center">
             <Ionicons name="alert-circle" size={24} color="#FFFFFF" />
@@ -150,18 +246,38 @@ export default function HomePage() {
 
         {/* Emergency Contact */}
         <Link href="/contacts" asChild className="mb-12">
-          <TouchableOpacity className="bg-white p-4 rounded-xl border border-gray-200" style={{ elevation: 1 }}>
+          <TouchableOpacity 
+            className="p-4 rounded-xl border" 
+            style={{ 
+              backgroundColor: colors.card,
+              borderColor: colors.border,
+              elevation: 1 
+            }}
+          >
             <View className="flex-row items-center justify-between">
               <View className="flex-row items-center">
-                <View className="bg-red-100 p-2 rounded-full">
-                  <Ionicons name="call" size={20} color="#DC2626" />
+                <View 
+                  className="p-2 rounded-full"
+                  style={{ backgroundColor: colors.error + '20' }}
+                >
+                  <Ionicons name="call" size={20} color={colors.error} />
                 </View>
                 <View className="ml-3">
-                  <Text className="font-semibold text-gray-900">Emergency: 108</Text>
-                  <Text className="text-sm text-gray-600">24/7 Medical Help</Text>
+                  <Text 
+                    className="font-semibold"
+                    style={{ color: colors.foreground }}
+                  >
+                    Emergency: 108
+                  </Text>
+                  <Text 
+                    className="text-sm"
+                    style={{ color: colors.mutedForeground }}
+                  >
+                    24/7 Medical Help
+                  </Text>
                 </View>
               </View>
-              <Ionicons name="chevron-forward" size={20} color="#6B7280" />
+              <Ionicons name="chevron-forward" size={20} color={colors.mutedForeground} />
             </View>
           </TouchableOpacity>
         </Link>

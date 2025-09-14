@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { Alert, RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Header from '../../components/Header';
+import { useAppTheme } from '../../components/ThemeProvider';
 import TutorialDetailModal from '../../components/TutorialDetailModal';
 import { TutorialCategory, TutorialGuide } from '../../types/tutorial';
 
@@ -84,6 +85,7 @@ const recentGuides: TutorialGuide[] = [
 ];
 
 export default function TutorialsScreen() {
+  const { colors } = useAppTheme();
   const [refreshing, setRefreshing] = useState(false);
   const [selectedGuide, setSelectedGuide] = useState<TutorialGuide | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -127,15 +129,15 @@ export default function TutorialsScreen() {
 
   const getTypeColor = (type: TutorialGuide['type']) => {
     switch (type) {
-      case 'video': return '#DC2626';
-      case 'article': return '#1E40AF';
-      case 'checklist': return '#059669';
-      default: return '#6B7280';
+      case 'video': return colors.error;
+      case 'article': return colors.primary;
+      case 'checklist': return colors.success;
+      default: return colors.mutedForeground;
     }
   };
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View className="flex-1" style={{ backgroundColor: colors.background }}>
       <Header 
         title="Health Education" 
         subtitle="Learn & Stay Healthy"
@@ -151,7 +153,12 @@ export default function TutorialsScreen() {
           
           {/* Categories Section */}
           <View>
-            <Text className="text-xl font-bold text-gray-900 mb-4">Categories</Text>
+            <Text 
+              className="text-xl font-bold mb-4"
+              style={{ color: colors.foreground }}
+            >
+              Categories
+            </Text>
             
             <View className="flex flex-row flex-wrap gap-4">
               {categories.map((category) => (
@@ -162,8 +169,11 @@ export default function TutorialsScreen() {
                   activeOpacity={0.8}
                 >
                   <View 
-                    className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 h-36"
-                    style={{ backgroundColor: category.bgColor }}
+                    className="rounded-xl p-4 shadow-sm border h-36"
+                    style={{ 
+                      backgroundColor: colors.card,
+                      borderColor: colors.border,
+                    }}
                   >
                     <View className="flex flex-col items-center justify-center h-full gap-2">
                       <View 
@@ -185,12 +195,19 @@ export default function TutorialsScreen() {
                         >
                           {category.title}
                         </Text>
-                        <Text className="text-gray-600 text-xs text-center leading-tight" numberOfLines={2}>
+                        <Text 
+                          className="text-xs text-center leading-tight"
+                          style={{ color: colors.mutedForeground }}
+                          numberOfLines={2}
+                        >
                           {category.description}
                         </Text>
                         <View className="flex flex-row items-center gap-1">
-                          <Ionicons name="book-outline" size={10} color="#6B7280" />
-                          <Text className="text-gray-500 text-xs font-medium">
+                          <Ionicons name="book-outline" size={10} color={colors.mutedForeground} />
+                          <Text 
+                            className="text-xs font-medium"
+                            style={{ color: colors.mutedForeground }}
+                          >
                             {category.count} guides
                           </Text>
                         </View>
@@ -205,10 +222,20 @@ export default function TutorialsScreen() {
           {/* Recent Guides Section */}
           <View>
             <View className="flex flex-row items-center justify-between mb-4">
-              <Text className="text-xl font-bold text-gray-900">Recent Guides</Text>
+              <Text 
+                className="text-xl font-bold"
+                style={{ color: colors.foreground }}
+              >
+                Recent Guides
+              </Text>
               <TouchableOpacity className="flex flex-row items-center gap-1">
-                <Text className="text-blue-600 font-semibold text-sm">View All</Text>
-                <Ionicons name="chevron-forward-outline" size={16} color="#2563EB" />
+                <Text 
+                  className="font-semibold text-sm"
+                  style={{ color: colors.primary }}
+                >
+                  View All
+                </Text>
+                <Ionicons name="chevron-forward-outline" size={16} color={colors.primary} />
               </TouchableOpacity>
             </View>
 
@@ -217,12 +244,19 @@ export default function TutorialsScreen() {
                 <TouchableOpacity
                   key={guide.id}
                   onPress={() => handleGuidePress(guide)}
-                  className="bg-white rounded-xl p-5 shadow-sm border border-gray-100"
+                  className="rounded-xl p-5 shadow-sm border"
+                  style={{ 
+                    backgroundColor: colors.card,
+                    borderColor: colors.border,
+                  }}
                   activeOpacity={0.8}
                 >
                   <View className="flex flex-row items-center gap-4">
                     {/* Type Icon */}
-                    <View className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
+                    <View 
+                      className="w-12 h-12 rounded-xl flex items-center justify-center"
+                      style={{ backgroundColor: colors.muted }}
+                    >
                       <Ionicons 
                         name={getTypeIcon(guide.type)} 
                         size={22} 
@@ -233,27 +267,44 @@ export default function TutorialsScreen() {
                     {/* Content */}
                     <View className="flex-1 flex flex-col gap-1">
                       <View className="flex flex-row items-center gap-2">
-                        <Text className="text-lg font-bold text-gray-900 flex-1">
+                        <Text 
+                          className="text-lg font-bold flex-1"
+                          style={{ color: colors.foreground }}
+                        >
                           {guide.title}
                         </Text>
                         {guide.isNew && (
-                          <View className="bg-green-100 px-2 py-1 rounded-full">
-                            <Text className="text-green-700 text-xs font-bold">NEW</Text>
+                          <View 
+                            className="px-2 py-1 rounded-full"
+                            style={{ backgroundColor: colors.success + '20' }}
+                          >
+                            <Text 
+                              className="text-xs font-bold"
+                              style={{ color: colors.success }}
+                            >
+                              NEW
+                            </Text>
                           </View>
                         )}
                       </View>
                       
                       <View className="flex flex-row items-center gap-4">
                         <View className="flex flex-row items-center gap-1">
-                          <Ionicons name="time-outline" size={14} color="#6B7280" />
-                          <Text className="text-gray-600 text-sm font-medium">
+                          <Ionicons name="time-outline" size={14} color={colors.mutedForeground} />
+                          <Text 
+                            className="text-sm font-medium"
+                            style={{ color: colors.mutedForeground }}
+                          >
                             {guide.duration}
-                          </Text>
+                        </Text>
                         </View>
                         
                         <View className="flex flex-row items-center gap-1">
-                          <Ionicons name="folder-outline" size={14} color="#6B7280" />
-                          <Text className="text-gray-600 text-sm">
+                          <Ionicons name="folder-outline" size={14} color={colors.mutedForeground} />
+                          <Text 
+                            className="text-sm"
+                            style={{ color: colors.mutedForeground }}
+                          >
                             {guide.category}
                           </Text>
                         </View>
@@ -261,7 +312,7 @@ export default function TutorialsScreen() {
                     </View>
 
                     {/* Arrow */}
-                    <Ionicons name="chevron-forward-outline" size={18} color="#9CA3AF" />
+                    <Ionicons name="chevron-forward-outline" size={18} color={colors.mutedForeground} />
                   </View>
                 </TouchableOpacity>
               ))}
@@ -269,41 +320,75 @@ export default function TutorialsScreen() {
           </View>
 
           {/* Quick Actions */}
-          <View className="bg-blue-50 rounded-xl p-4 border border-blue-100">
+          <View 
+            className="rounded-xl p-4 border"
+            style={{ 
+              backgroundColor: colors.primary + '10',
+              borderColor: colors.primary + '30',
+            }}
+          >
             <View className="flex flex-row items-center gap-3 mb-3">
-              <View className="bg-blue-100 p-2 rounded-lg">
-                <Ionicons name="bulb-outline" size={18} color="#1E40AF" />
+              <View 
+                className="p-2 rounded-lg"
+                style={{ backgroundColor: colors.primary + '20' }}
+              >
+                <Ionicons name="bulb-outline" size={18} color={colors.primary} />
               </View>
-              <Text className="text-blue-900 font-bold text-base">
+              <Text 
+                className="font-bold text-base"
+                style={{ color: colors.primary }}
+              >
                 Quick Access
               </Text>
             </View>
             
             <View className="flex flex-col gap-2">
               <TouchableOpacity className="flex flex-row items-center gap-3 py-2">
-                <Ionicons name="download-outline" size={18} color="#1E40AF" />
-                <Text className="text-blue-800 font-medium flex-1 text-sm">
+                <Ionicons name="download-outline" size={18} color={colors.primary} />
+                <Text 
+                  className="font-medium flex-1 text-sm"
+                  style={{ color: colors.primary }}
+                >
                   Download for Offline
                 </Text>
-                <Ionicons name="chevron-forward-outline" size={14} color="#1E40AF" />
+                <Ionicons name="chevron-forward-outline" size={14} color={colors.primary} />
               </TouchableOpacity>
               
               <TouchableOpacity className="flex flex-row items-center gap-3 py-2">
-                <Ionicons name="bookmark-outline" size={18} color="#1E40AF" />
-                <Text className="text-blue-800 font-medium flex-1 text-sm">
+                <Ionicons name="bookmark-outline" size={18} color={colors.primary} />
+                <Text 
+                  className="font-medium flex-1 text-sm"
+                  style={{ color: colors.primary }}
+                >
                   My Bookmarks
                 </Text>
-                <View className="bg-blue-200 px-2 py-1 rounded-full">
-                  <Text className="text-blue-800 text-xs font-bold">3</Text>
+                <View 
+                  className="px-2 py-1 rounded-full"
+                  style={{ backgroundColor: colors.primary + '30' }}
+                >
+                  <Text 
+                    className="text-xs font-bold"
+                    style={{ color: colors.primary }}
+                  >
+                    3
+                  </Text>
                 </View>
               </TouchableOpacity>
               
               <TouchableOpacity className="flex flex-row items-center gap-3 py-2">
-                <Ionicons name="language-outline" size={18} color="#1E40AF" />
-                <Text className="text-blue-800 font-medium flex-1 text-sm">
+                <Ionicons name="language-outline" size={18} color={colors.primary} />
+                <Text 
+                  className="font-medium flex-1 text-sm"
+                  style={{ color: colors.primary }}
+                >
                   Change Language
                 </Text>
-                <Text className="text-blue-600 text-xs">English</Text>
+                <Text 
+                  className="text-xs"
+                  style={{ color: colors.primary }}
+                >
+                  English
+                </Text>
               </TouchableOpacity>
             </View>
           </View>

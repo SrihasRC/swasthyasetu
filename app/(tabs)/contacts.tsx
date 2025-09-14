@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { Alert, Linking, RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Header from '../../components/Header';
+import { useAppTheme } from '../../components/ThemeProvider';
 
 interface EmergencyContact {
   id: string;
@@ -66,6 +67,7 @@ const emergencyContacts: EmergencyContact[] = [
 ];
 
 export default function ContactsScreen() {
+  const { colors } = useAppTheme();
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = async () => {
@@ -114,19 +116,10 @@ export default function ContactsScreen() {
 
   const getContactColor = (type: EmergencyContact['type']) => {
     switch (type) {
-      case 'emergency': return '#DC2626';
-      case 'health_center': return '#059669';
-      case 'official': return '#1E40AF';
-      default: return '#6B7280';
-    }
-  };
-
-  const getContactBgColor = (type: EmergencyContact['type']) => {
-    switch (type) {
-      case 'emergency': return '#FEF2F2';
-      case 'health_center': return '#ECFDF5';
-      case 'official': return '#EFF6FF';
-      default: return '#F9FAFB';
+      case 'emergency': return colors.error;
+      case 'health_center': return colors.success;
+      case 'official': return colors.primary;
+      default: return colors.mutedForeground;
     }
   };
 
@@ -135,7 +128,7 @@ export default function ContactsScreen() {
   const officials = emergencyContacts.filter(c => c.type === 'official');
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View className="flex-1" style={{ backgroundColor: colors.background }}>
       <Header 
         title="Emergency Contacts" 
         subtitle="Get Help When You Need It"
@@ -152,10 +145,18 @@ export default function ContactsScreen() {
           {/* Emergency Numbers */}
           <View>
             <View className="flex flex-row items-center gap-3 mb-4">
-              <View className="bg-red-100 p-2 rounded-lg">
-                <Ionicons name="warning" size={20} color="#DC2626" />
+              <View 
+                className="p-2 rounded-lg"
+                style={{ backgroundColor: colors.error + '20' }}
+              >
+                <Ionicons name="warning" size={20} color={colors.error} />
               </View>
-              <Text className="text-xl font-bold text-gray-900">Emergency</Text>
+              <Text 
+                className="text-xl font-bold"
+                style={{ color: colors.foreground }}
+              >
+                Emergency
+              </Text>
             </View>
             
             <View className="flex flex-col gap-3">
@@ -163,27 +164,57 @@ export default function ContactsScreen() {
                 <TouchableOpacity
                   key={contact.id}
                   onPress={() => handleCall(contact)}
-                  className="bg-white rounded-xl p-4 shadow-sm border-l-2 border-red-500"
-                  style={{ borderRightWidth: 1, borderTopWidth: 1, borderBottomWidth: 1, borderRightColor: '#E5E7EB', borderTopColor: '#E5E7EB', borderBottomColor: '#E5E7EB' }}
+                  className="rounded-xl p-4 shadow-sm border-l"
+                  style={{ 
+                    backgroundColor: colors.card,
+                    borderLeftColor: colors.error,
+                    borderRightWidth: 1, 
+                    borderTopWidth: 1, 
+                    borderBottomWidth: 1, 
+                    borderRightColor: colors.border, 
+                    borderTopColor: colors.border, 
+                    borderBottomColor: colors.border,
+                  }}
                   activeOpacity={0.8}
                 >
                   <View className="flex flex-row items-center gap-3">
-                    <View className="bg-red-600 p-3 rounded-lg">
+                    <View 
+                      className="p-3 rounded-lg"
+                      style={{ backgroundColor: colors.error }}
+                    >
                       <Ionicons name="call" size={20} color="white" />
                     </View>
                     
                     <View className="flex-1 flex flex-col gap-1">
-                      <Text className="font-bold text-gray-900 text-lg">{contact.name}</Text>
-                      <Text className="text-gray-600 text-sm font-medium">{contact.title}</Text>
+                      <Text 
+                        className="font-bold text-lg"
+                        style={{ color: colors.foreground }}
+                      >
+                        {contact.name}
+                      </Text>
+                      <Text 
+                        className="text-sm font-medium"
+                        style={{ color: colors.mutedForeground }}
+                      >
+                        {contact.title}
+                      </Text>
                       {contact.isAvailable24x7 && (
                         <View className="flex flex-row items-center gap-1">
-                          <Ionicons name="time-outline" size={12} color="#059669" />
-                          <Text className="text-green-600 text-xs font-medium">24/7 Available</Text>
+                          <Ionicons name="time-outline" size={12} color={colors.success} />
+                          <Text 
+                            className="text-xs font-medium"
+                            style={{ color: colors.success }}
+                          >
+                            24/7 Available
+                          </Text>
                         </View>
                       )}
                     </View>
                     
-                    <View className="bg-red-600 px-3 py-2 rounded-lg">
+                    <View 
+                      className="px-3 py-2 rounded-lg"
+                      style={{ backgroundColor: colors.error }}
+                    >
                       <Text className="text-white font-bold text-xs">CALL</Text>
                     </View>
                   </View>
@@ -195,22 +226,34 @@ export default function ContactsScreen() {
           {/* Health Centers */}
           <View>
             <View className="flex flex-row items-center gap-3 mb-4">
-              <View className="bg-green-100 p-2 rounded-lg">
-                <Ionicons name="medical" size={20} color="#059669" />
+              <View 
+                className="p-2 rounded-lg"
+                style={{ backgroundColor: colors.success + '20' }}
+              >
+                <Ionicons name="medical" size={20} color={colors.success} />
               </View>
-              <Text className="text-xl font-bold text-gray-900">Health Centers</Text>
+              <Text 
+                className="text-xl font-bold"
+                style={{ color: colors.foreground }}
+              >
+                Health Centers
+              </Text>
             </View>
             
             <View className="flex flex-col gap-3">
               {healthCenters.map((contact) => (
                 <View
                   key={contact.id}
-                  className="bg-white rounded-xl p-4 shadow-sm border border-gray-100"
+                  className="rounded-xl p-4 shadow-sm border"
+                  style={{ 
+                    backgroundColor: colors.card,
+                    borderColor: colors.border,
+                  }}
                 >
                   <View className="flex flex-row items-center gap-3 mb-3">
                     <View 
                       className="p-2 rounded-lg"
-                      style={{ backgroundColor: getContactBgColor(contact.type) }}
+                      style={{ backgroundColor: colors.success + '20' }}
                     >
                       <Ionicons 
                         name={getContactIcon(contact.type)} 
@@ -219,19 +262,39 @@ export default function ContactsScreen() {
                       />
                     </View>
                     <View className="flex-1">
-                      <Text className="font-bold text-gray-900 text-base">{contact.name}</Text>
-                      <Text className="text-gray-600 text-sm">{contact.title}</Text>
+                      <Text 
+                        className="font-bold text-base"
+                        style={{ color: colors.foreground }}
+                      >
+                        {contact.name}
+                      </Text>
+                      <Text 
+                        className="text-sm"
+                        style={{ color: colors.mutedForeground }}
+                      >
+                        {contact.title}
+                      </Text>
                       <View className="flex flex-row items-center flex-wrap gap-3 mt-1">
                         {contact.location && (
                           <View className="flex flex-row items-center gap-1">
-                            <Ionicons name="location-outline" size={12} color="#6B7280" />
-                            <Text className="text-gray-500 text-xs">{contact.location}</Text>
+                            <Ionicons name="location-outline" size={12} color={colors.mutedForeground} />
+                            <Text 
+                              className="text-xs"
+                              style={{ color: colors.mutedForeground }}
+                            >
+                              {contact.location}
+                            </Text>
                           </View>
                         )}
                         {contact.isAvailable24x7 && (
                           <View className="flex flex-row items-center gap-1">
-                            <Ionicons name="time-outline" size={12} color="#059669" />
-                            <Text className="text-green-600 text-xs font-medium">24/7</Text>
+                            <Ionicons name="time-outline" size={12} color={colors.success} />
+                            <Text 
+                              className="text-xs font-medium"
+                              style={{ color: colors.success }}
+                            >
+                              24/7
+                            </Text>
                           </View>
                         )}
                       </View>
@@ -241,7 +304,8 @@ export default function ContactsScreen() {
                   <View className="flex flex-row gap-2">
                     <TouchableOpacity 
                       onPress={() => handleCall(contact)}
-                      className="flex-1 bg-green-600 py-2 px-3 rounded-lg flex flex-row items-center justify-center gap-2"
+                      className="flex-1 py-2 px-3 rounded-lg flex flex-row items-center justify-center gap-2"
+                      style={{ backgroundColor: colors.success }}
                     >
                       <Ionicons name="call-outline" size={16} color="white" />
                       <Text className="text-white font-bold text-sm">Call</Text>
@@ -249,10 +313,16 @@ export default function ContactsScreen() {
                     
                     <TouchableOpacity 
                       onPress={() => handleDirection(contact)}
-                      className="flex-1 border border-gray-300 py-2 px-3 rounded-lg flex flex-row items-center justify-center gap-2"
+                      className="flex-1 py-2 px-3 rounded-lg flex flex-row items-center justify-center gap-2 border"
+                      style={{ borderColor: colors.border }}
                     >
-                      <Ionicons name="navigate-outline" size={18} color="#374151" />
-                      <Text className="text-gray-700 font-bold">Direction</Text>
+                      <Ionicons name="navigate-outline" size={18} color={colors.foreground} />
+                      <Text 
+                        className="font-bold"
+                        style={{ color: colors.foreground }}
+                      >
+                        Direction
+                      </Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -263,22 +333,34 @@ export default function ContactsScreen() {
           {/* Health Officials */}
           <View>
             <View className="flex flex-row items-center gap-3 mb-4">
-              <View className="bg-blue-100 p-2 rounded-lg">
-                <Ionicons name="people" size={20} color="#1E40AF" />
+              <View 
+                className="p-2 rounded-lg"
+                style={{ backgroundColor: colors.primary + '20' }}
+              >
+                <Ionicons name="people" size={20} color={colors.primary} />
               </View>
-              <Text className="text-xl font-bold text-gray-900">Health Officials</Text>
+              <Text 
+                className="text-xl font-bold"
+                style={{ color: colors.foreground }}
+              >
+                Health Officials
+              </Text>
             </View>
             
             <View className="flex flex-col gap-3">
               {officials.map((contact) => (
                 <View
                   key={contact.id}
-                  className="bg-white rounded-xl p-4 shadow-sm border border-gray-100"
+                  className="rounded-xl p-4 shadow-sm border"
+                  style={{ 
+                    backgroundColor: colors.card,
+                    borderColor: colors.border,
+                  }}
                 >
                   <View className="flex flex-row items-center gap-3 mb-3">
                     <View 
                       className="p-2 rounded-lg"
-                      style={{ backgroundColor: getContactBgColor(contact.type) }}
+                      style={{ backgroundColor: colors.primary + '20' }}
                     >
                       <Ionicons 
                         name={getContactIcon(contact.type)} 
@@ -287,12 +369,27 @@ export default function ContactsScreen() {
                       />
                     </View>
                     <View className="flex-1">
-                      <Text className="font-bold text-gray-900 text-base">{contact.name}</Text>
-                      <Text className="text-gray-600 text-sm">{contact.title}</Text>
+                      <Text 
+                        className="font-bold text-base"
+                        style={{ color: colors.foreground }}
+                      >
+                        {contact.name}
+                      </Text>
+                      <Text 
+                        className="text-sm"
+                        style={{ color: colors.mutedForeground }}
+                      >
+                        {contact.title}
+                      </Text>
                       {contact.location && (
                         <View className="flex flex-row items-center gap-1 mt-1">
-                          <Ionicons name="location-outline" size={12} color="#6B7280" />
-                          <Text className="text-gray-500 text-xs">{contact.location}</Text>
+                          <Ionicons name="location-outline" size={12} color={colors.mutedForeground} />
+                          <Text 
+                            className="text-xs"
+                            style={{ color: colors.mutedForeground }}
+                          >
+                            {contact.location}
+                          </Text>
                         </View>
                       )}
                     </View>
@@ -301,7 +398,8 @@ export default function ContactsScreen() {
                   <View className="flex flex-row gap-2">
                     <TouchableOpacity 
                       onPress={() => handleCall(contact)}
-                      className="flex-1 bg-blue-600 py-2 px-3 rounded-lg flex flex-row items-center justify-center gap-2"
+                      className="flex-1 py-2 px-3 rounded-lg flex flex-row items-center justify-center gap-2"
+                      style={{ backgroundColor: colors.primary }}
                     >
                       <Ionicons name="call-outline" size={16} color="white" />
                       <Text className="text-white font-bold text-sm">Call</Text>
@@ -309,10 +407,16 @@ export default function ContactsScreen() {
                     
                     <TouchableOpacity 
                       onPress={() => handleMessage(contact)}
-                      className="flex-1 border border-gray-300 py-2 px-3 rounded-lg flex flex-row items-center justify-center gap-2"
+                      className="flex-1 py-2 px-3 rounded-lg flex flex-row items-center justify-center gap-2 border"
+                      style={{ borderColor: colors.border }}
                     >
-                      <Ionicons name="chatbubble-outline" size={16} color="#374151" />
-                      <Text className="text-gray-700 font-bold text-sm">Message</Text>
+                      <Ionicons name="chatbubble-outline" size={16} color={colors.foreground} />
+                      <Text 
+                        className="font-bold text-sm"
+                        style={{ color: colors.foreground }}
+                      >
+                        Message
+                      </Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -321,31 +425,60 @@ export default function ContactsScreen() {
           </View>
 
           {/* Quick Actions */}
-          <View className="bg-blue-50 rounded-xl p-4 border border-blue-100">
+          <View 
+            className="rounded-xl p-4 border"
+            style={{ 
+              backgroundColor: colors.primary + '10',
+              borderColor: colors.primary + '30',
+            }}
+          >
             <View className="flex flex-row items-center gap-3 mb-3">
-              <View className="bg-blue-100 p-2 rounded-lg">
-                <Ionicons name="flash-outline" size={18} color="#1E40AF" />
+              <View 
+                className="p-2 rounded-lg"
+                style={{ backgroundColor: colors.primary + '20' }}
+              >
+                <Ionicons name="flash-outline" size={18} color={colors.primary} />
               </View>
-              <Text className="text-blue-900 font-bold text-base">Quick Actions</Text>
+              <Text 
+                className="font-bold text-base"
+                style={{ color: colors.primary }}
+              >
+                Quick Actions
+              </Text>
             </View>
             
             <View className="flex flex-col gap-2">
               <TouchableOpacity className="flex flex-row items-center gap-3 py-2">
-                <Ionicons name="add-circle-outline" size={18} color="#1E40AF" />
-                <Text className="text-blue-800 font-medium flex-1 text-sm">Add Emergency Contact</Text>
-                <Ionicons name="chevron-forward-outline" size={14} color="#1E40AF" />
+                <Ionicons name="add-circle-outline" size={18} color={colors.primary} />
+                <Text 
+                  className="font-medium flex-1 text-sm"
+                  style={{ color: colors.primary }}
+                >
+                  Add Emergency Contact
+                </Text>
+                <Ionicons name="chevron-forward-outline" size={14} color={colors.primary} />
               </TouchableOpacity>
               
               <TouchableOpacity className="flex flex-row items-center gap-3 py-2">
-                <Ionicons name="share-outline" size={18} color="#1E40AF" />
-                <Text className="text-blue-800 font-medium flex-1 text-sm">Share Contact List</Text>
-                <Ionicons name="chevron-forward-outline" size={14} color="#1E40AF" />
+                <Ionicons name="share-outline" size={18} color={colors.primary} />
+                <Text 
+                  className="font-medium flex-1 text-sm"
+                  style={{ color: colors.primary }}
+                >
+                  Share Contact List
+                </Text>
+                <Ionicons name="chevron-forward-outline" size={14} color={colors.primary} />
               </TouchableOpacity>
               
               <TouchableOpacity className="flex flex-row items-center gap-3 py-2">
-                <Ionicons name="download-outline" size={18} color="#1E40AF" />
-                <Text className="text-blue-800 font-medium flex-1 text-sm">Save for Offline</Text>
-                <Ionicons name="chevron-forward-outline" size={14} color="#1E40AF" />
+                <Ionicons name="download-outline" size={18} color={colors.primary} />
+                <Text 
+                  className="font-medium flex-1 text-sm"
+                  style={{ color: colors.primary }}
+                >
+                  Save for Offline
+                </Text>
+                <Ionicons name="chevron-forward-outline" size={14} color={colors.primary} />
               </TouchableOpacity>
             </View>
           </View>

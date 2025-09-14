@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Text, View } from 'react-native';
+import { useAppTheme } from './ThemeProvider';
 
 interface AlertProps {
   message: string;
@@ -15,55 +16,80 @@ export default function Alert({
   title,
   showIcon = true 
 }: AlertProps) {
+  const { colors } = useAppTheme();
+  
   const getAlertStyles = () => {
     switch (type) {
       case 'success':
-        return 'bg-green-50 border-green-200';
+        return {
+          backgroundColor: colors.success + '10',
+          borderColor: colors.success + '30',
+        };
       case 'warning':
-        return 'bg-yellow-50 border-yellow-200';
+        return {
+          backgroundColor: colors.warning + '10',
+          borderColor: colors.warning + '30',
+        };
       case 'error':
-        return 'bg-red-50 border-red-200';
+        return {
+          backgroundColor: colors.error + '10',
+          borderColor: colors.error + '30',
+        };
       case 'info':
-        return 'bg-blue-50 border-blue-200';
+        return {
+          backgroundColor: colors.info + '10',
+          borderColor: colors.info + '30',
+        };
       default:
-        return 'bg-blue-50 border-blue-200';
+        return {
+          backgroundColor: colors.info + '10',
+          borderColor: colors.info + '30',
+        };
     }
   };
 
-  const getTextStyles = () => {
+  const getTextColor = () => {
     switch (type) {
       case 'success':
-        return { title: 'text-green-800', message: 'text-green-700' };
+        return colors.success;
       case 'warning':
-        return { title: 'text-yellow-800', message: 'text-yellow-700' };
+        return colors.warning;
       case 'error':
-        return { title: 'text-red-800', message: 'text-red-700' };
+        return colors.error;
       case 'info':
-        return { title: 'text-blue-800', message: 'text-blue-700' };
+        return colors.info;
       default:
-        return { title: 'text-blue-800', message: 'text-blue-700' };
+        return colors.info;
     }
   };
 
   const getIcon = () => {
+    const iconColor = getTextColor();
     switch (type) {
       case 'success':
-        return <Ionicons name="checkmark-circle" size={20} color="#059669" />;
+        return <Ionicons name="checkmark-circle" size={20} color={iconColor} />;
       case 'warning':
-        return <Ionicons name="warning" size={20} color="#D97706" />;
+        return <Ionicons name="warning" size={20} color={iconColor} />;
       case 'error':
-        return <Ionicons name="close-circle" size={20} color="#DC2626" />;
+        return <Ionicons name="close-circle" size={20} color={iconColor} />;
       case 'info':
-        return <Ionicons name="information-circle" size={20} color="#2563EB" />;
+        return <Ionicons name="information-circle" size={20} color={iconColor} />;
       default:
-        return <Ionicons name="information-circle" size={20} color="#2563EB" />;
+        return <Ionicons name="information-circle" size={20} color={iconColor} />;
     }
   };
 
-  const textStyles = getTextStyles();
+  const alertStyles = getAlertStyles();
+  const textColor = getTextColor();
 
   return (
-    <View className={`p-4 rounded-xl border ${getAlertStyles()}`}>
+    <View 
+      className="p-4 rounded-xl border"
+      style={{
+        backgroundColor: alertStyles.backgroundColor,
+        borderColor: alertStyles.borderColor,
+      }}
+    >
       <View className="flex-row items-start">
         {showIcon && (
           <View className="mr-3 mt-0.5">
@@ -72,11 +98,17 @@ export default function Alert({
         )}
         <View className="flex-1">
           {title && (
-            <Text className={`font-semibold mb-1 ${textStyles.title}`}>
+            <Text 
+              className="font-semibold mb-1"
+              style={{ color: textColor }}
+            >
               {title}
             </Text>
           )}
-          <Text className={`${textStyles.message} leading-5`}>
+          <Text 
+            className="leading-5"
+            style={{ color: textColor }}
+          >
             {message}
           </Text>
         </View>

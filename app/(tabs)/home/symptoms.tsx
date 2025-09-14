@@ -8,6 +8,7 @@ import Card from '../../../components/Card';
 import Header from '../../../components/Header';
 import Input from '../../../components/Input';
 import ProgressBar from '../../../components/ProgressBar';
+import { useAppTheme } from '../../../components/ThemeProvider';
 
 interface FormData {
   village: string;
@@ -20,6 +21,7 @@ interface FormData {
 }
 
 export default function SymptomsPage() {
+  const { colors } = useAppTheme();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({
     village: '',
@@ -132,11 +134,19 @@ export default function SymptomsPage() {
 
   const renderStep1 = () => (
     <ScrollView className="flex-1 p-4" showsVerticalScrollIndicator={false}>
-      <Text className="text-xl font-bold text-gray-900 mb-6">Basic Information</Text>
+      <Text 
+        className="text-xl font-bold mb-6"
+        style={{ color: colors.foreground }}
+      >
+        Basic Information
+      </Text>
       
       {/* Village Selection */}
-      <Text className="text-gray-700 font-medium mb-2">
-        Village <Text className="text-red-500">*</Text>
+      <Text 
+        className="font-medium mb-2"
+        style={{ color: colors.foreground }}
+      >
+        Village <Text style={{ color: colors.error }}>*</Text>
       </Text>
       <View className="flex flex-col gap-2 mb-4">
         {villages.map((village) => (
@@ -147,15 +157,18 @@ export default function SymptomsPage() {
               setFormData(prev => ({ ...prev, village }));
               if (errors.village) setErrors(prev => ({ ...prev, village: '' }));
             }}
-            className={`p-4 rounded-xl border-2 ${
-              formData.village === village 
-                ? 'border-blue-500 bg-blue-50' 
-                : 'border-gray-200 bg-white'
-            }`}
+            className="p-4 rounded-xl border-2"
+            style={{
+              borderColor: formData.village === village ? colors.primary : colors.border,
+              backgroundColor: formData.village === village ? colors.primary + '10' : colors.card,
+            }}
           >
-            <Text className={`font-medium ${
-              formData.village === village ? 'text-blue-700' : 'text-gray-900'
-            }`}>
+            <Text 
+              className="font-medium"
+              style={{
+                color: formData.village === village ? colors.primary : colors.foreground
+              }}
+            >
               {village}
             </Text>
           </TouchableOpacity>
@@ -193,8 +206,11 @@ export default function SymptomsPage() {
       />
 
       {/* Symptoms Selection */}
-      <Text className="text-gray-700 font-medium mb-2">
-        Symptoms (select all that apply) <Text className="text-red-500">*</Text>
+      <Text 
+        className="font-medium mb-2"
+        style={{ color: colors.foreground }}
+      >
+        Symptoms (select all that apply) <Text style={{ color: colors.error }}>*</Text>
       </Text>
       <View className="flex flex-col gap-3 mb-4">
         {symptomOptions.map((symptom) => (
@@ -202,17 +218,19 @@ export default function SymptomsPage() {
             key={symptom.id}
             activeOpacity={0.8}
             onPress={() => toggleSymptom(symptom.id)}
-            className={`flex-row items-center p-4 rounded-xl border-2 ${
-              formData.symptoms.includes(symptom.id)
-                ? 'border-red-500 bg-red-50'
-                : 'border-gray-200 bg-white'
-            }`}
+            className="flex-row items-center p-4 rounded-xl border-2"
+            style={{
+              borderColor: formData.symptoms.includes(symptom.id) ? colors.error : colors.border,
+              backgroundColor: formData.symptoms.includes(symptom.id) ? colors.error + '10' : colors.card,
+            }}
           >
-            <View className={`w-6 h-6 rounded border-2 mr-3 items-center justify-center ${
-              formData.symptoms.includes(symptom.id)
-                ? 'border-red-500 bg-red-500'
-                : 'border-gray-300'
-            }`}>
+            <View 
+              className="w-6 h-6 rounded border-2 mr-3 items-center justify-center"
+              style={{
+                borderColor: formData.symptoms.includes(symptom.id) ? colors.error : colors.border,
+                backgroundColor: formData.symptoms.includes(symptom.id) ? colors.error : 'transparent',
+              }}
+            >
               {formData.symptoms.includes(symptom.id) && (
                 <Ionicons name="checkmark" size={16} color="#FFFFFF" />
               )}
@@ -220,25 +238,38 @@ export default function SymptomsPage() {
             <Ionicons 
               name={symptom.icon as any} 
               size={24} 
-              color={formData.symptoms.includes(symptom.id) ? "#DC2626" : "#6B7280"} 
+              color={formData.symptoms.includes(symptom.id) ? colors.error : colors.mutedForeground} 
             />
-            <Text className={`ml-3 font-medium ${
-              formData.symptoms.includes(symptom.id) ? 'text-red-700' : 'text-gray-900'
-            }`}>
+            <Text 
+              className="ml-3 font-medium"
+              style={{
+                color: formData.symptoms.includes(symptom.id) ? colors.error : colors.foreground
+              }}
+            >
               {symptom.label}
             </Text>
           </TouchableOpacity>
         ))}
       </View>
       {errors.symptoms && (
-        <Text className="text-red-500 text-sm mb-4 ml-1">{errors.symptoms}</Text>
+        <Text 
+          className="text-sm mb-4 ml-1"
+          style={{ color: colors.error }}
+        >
+          {errors.symptoms}
+        </Text>
       )}
     </ScrollView>
   );
 
   const renderStep2 = () => (
     <ScrollView className="flex-1 p-4" showsVerticalScrollIndicator={false}>
-      <Text className="text-xl font-bold text-gray-900 mb-6">Additional Details</Text>
+      <Text 
+        className="text-xl font-bold mb-6"
+        style={{ color: colors.foreground }}
+      >
+        Additional Details
+      </Text>
       
       <Input
         label="When did symptoms start?"
@@ -254,14 +285,17 @@ export default function SymptomsPage() {
       />
 
       {/* Severity Selection */}
-      <Text className="text-gray-700 font-medium mb-2">
-        Severity Level <Text className="text-red-500">*</Text>
+      <Text 
+        className="font-medium mb-2"
+        style={{ color: colors.foreground }}
+      >
+        Severity Level <Text style={{ color: colors.error }}>*</Text>
       </Text>
       <View className="flex flex-col gap-3 mb-4">
         {[
-          { value: 'mild', label: 'Mild', color: 'green', bgColor: 'bg-green-50', borderColor: 'border-green-500', textColor: 'text-green-700', description: 'Manageable symptoms' },
-          { value: 'moderate', label: 'Moderate', color: 'orange', bgColor: 'bg-orange-50', borderColor: 'border-orange-500', textColor: 'text-orange-700', description: 'Concerning symptoms' },
-          { value: 'severe', label: 'Severe', color: 'red', bgColor: 'bg-red-50', borderColor: 'border-red-500', textColor: 'text-red-700', description: 'Urgent medical attention needed' }
+          { value: 'mild', label: 'Mild', color: colors.success, description: 'Manageable symptoms' },
+          { value: 'moderate', label: 'Moderate', color: colors.warning, description: 'Concerning symptoms' },
+          { value: 'severe', label: 'Severe', color: colors.error, description: 'Urgent medical attention needed' }
         ].map((severity) => (
           <TouchableOpacity
             key={severity.value}
@@ -270,38 +304,42 @@ export default function SymptomsPage() {
               setFormData(prev => ({ ...prev, severity: severity.value as any }));
               if (errors.severity) setErrors(prev => ({ ...prev, severity: '' }));
             }}
-            className={`p-4 rounded-xl border-2 ${
-              formData.severity === severity.value
-                ? `${severity.borderColor} ${severity.bgColor}`
-                : 'border-gray-200 bg-white'
-            }`}
+            className="p-4 rounded-xl border-2"
+            style={{
+              borderColor: formData.severity === severity.value ? severity.color : colors.border,
+              backgroundColor: formData.severity === severity.value ? severity.color + '10' : colors.card,
+            }}
           >
             <View className="flex-row items-center">
-              <View className={`w-6 h-6 rounded-full border-2 mr-3 items-center justify-center ${
-                formData.severity === severity.value
-                  ? `${severity.borderColor} ${severity.bgColor}`
-                  : 'border-gray-300 bg-white'
-              }`}>
+              <View 
+                className="w-6 h-6 rounded-full border-2 mr-3 items-center justify-center"
+                style={{
+                  borderColor: formData.severity === severity.value ? severity.color : colors.border,
+                  backgroundColor: formData.severity === severity.value ? severity.color + '10' : colors.card,
+                }}
+              >
                 {formData.severity === severity.value && (
-                  <View className={`w-3 h-3 rounded-full ${
-                    severity.color === 'green' ? 'bg-green-500' :
-                    severity.color === 'orange' ? 'bg-orange-500' : 'bg-red-500'
-                  }`} />
+                  <View 
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: severity.color }}
+                  />
                 )}
               </View>
               <View className="flex-1">
-                <Text className={`font-semibold ${
-                  formData.severity === severity.value 
-                    ? severity.textColor
-                    : 'text-gray-900'
-                }`}>
+                <Text 
+                  className="font-semibold"
+                  style={{
+                    color: formData.severity === severity.value ? severity.color : colors.foreground
+                  }}
+                >
                   {severity.label}
                 </Text>
-                <Text className={`text-sm ${
-                  formData.severity === severity.value 
-                    ? severity.textColor.replace('700', '600')
-                    : 'text-gray-600'
-                }`}>
+                <Text 
+                  className="text-sm"
+                  style={{
+                    color: formData.severity === severity.value ? severity.color : colors.mutedForeground
+                  }}
+                >
                   {severity.description}
                 </Text>
               </View>
@@ -310,7 +348,12 @@ export default function SymptomsPage() {
         ))}
       </View>
       {errors.severity && (
-        <Text className="text-red-500 text-sm mb-4 ml-1">{errors.severity}</Text>
+        <Text 
+          className="text-sm mb-4 ml-1"
+          style={{ color: colors.error }}
+        >
+          {errors.severity}
+        </Text>
       )}
 
       <Input
@@ -327,41 +370,75 @@ export default function SymptomsPage() {
 
   const renderStep3 = () => (
     <ScrollView className="flex-1 p-4" showsVerticalScrollIndicator={false}>
-      <Text className="text-xl font-bold text-gray-900 mb-6">Review & Submit</Text>
+      <Text 
+        className="text-xl font-bold mb-6"
+        style={{ color: colors.foreground }}
+      >
+        Review & Submit
+      </Text>
       
       <Card variant="elevated" title="Report Summary">
         <View className="flex flex-col gap-3">
           <View className="flex-row justify-between">
-            <Text className="text-gray-600">Village:</Text>
-            <Text className="font-medium text-gray-900">{formData.village}</Text>
+            <Text style={{ color: colors.mutedForeground }}>Village:</Text>
+            <Text 
+              className="font-medium"
+              style={{ color: colors.foreground }}
+            >
+              {formData.village}
+            </Text>
           </View>
           <View className="flex-row justify-between">
-            <Text className="text-gray-600">Household ID:</Text>
-            <Text className="font-medium text-gray-900">{formData.householdId}</Text>
+            <Text style={{ color: colors.mutedForeground }}>Household ID:</Text>
+            <Text 
+              className="font-medium"
+              style={{ color: colors.foreground }}
+            >
+              {formData.householdId}
+            </Text>
           </View>
           <View className="flex-row justify-between">
-            <Text className="text-gray-600">Patients:</Text>
-            <Text className="font-medium text-gray-900">{formData.patientCount}</Text>
+            <Text style={{ color: colors.mutedForeground }}>Patients:</Text>
+            <Text 
+              className="font-medium"
+              style={{ color: colors.foreground }}
+            >
+              {formData.patientCount}
+            </Text>
           </View>
           <View>
-            <Text className="text-gray-600 mb-1">Symptoms:</Text>
+            <Text 
+              className="mb-1"
+              style={{ color: colors.mutedForeground }}
+            >
+              Symptoms:
+            </Text>
             <View className="flex-row flex-wrap gap-1">
               {formData.symptoms.map((symptomId) => {
                 const symptom = symptomOptions.find(s => s.id === symptomId);
                 return (
-                  <View key={symptomId} className="bg-red-100 px-2 py-1 rounded">
-                    <Text className="text-red-700 text-sm">{symptom?.label}</Text>
+                  <View 
+                    key={symptomId} 
+                    className="px-2 py-1 rounded"
+                    style={{ backgroundColor: colors.error + '20' }}
+                  >
+                    <Text 
+                      className="text-sm"
+                      style={{ color: colors.error }}
+                    >
+                      {symptom?.label}
+                    </Text>
                   </View>
                 );
               })}
             </View>
           </View>
           <View className="flex-row justify-between">
-            <Text className="text-gray-600">Onset:</Text>
-            <Text className="font-medium text-gray-900">{formData.onsetDate}</Text>
+            <Text style={{color: colors.mutedForeground}}>Onset:</Text>
+            <Text style={{color: colors.foreground}} className="font-medium">{formData.onsetDate}</Text>
           </View>
           <View className="flex-row justify-between">
-            <Text className="text-gray-600">Severity:</Text>
+            <Text style={{color: colors.mutedForeground}}>Severity:</Text>
             <Text className={`font-medium capitalize ${
               formData.severity === 'severe' ? 'text-red-600' :
               formData.severity === 'moderate' ? 'text-orange-600' : 'text-green-600'
@@ -371,8 +448,8 @@ export default function SymptomsPage() {
           </View>
           {formData.notes && (
             <View>
-              <Text className="text-gray-600 mb-1">Notes:</Text>
-              <Text className="text-gray-900">{formData.notes}</Text>
+              <Text style={{color: colors.mutedForeground}} className="mb-1">Notes:</Text>
+              <Text style={{color: colors.foreground}}>{formData.notes}</Text>
             </View>
           )}
         </View>
@@ -389,7 +466,7 @@ export default function SymptomsPage() {
   );
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View className="flex-1" style={{ backgroundColor: colors.background }}>
       <Header 
         title="Report Case" 
         showBack={true}
@@ -397,7 +474,13 @@ export default function SymptomsPage() {
         subtitle={`Step ${currentStep} of 3`}
       />
       
-      <View className="px-4 py-3 bg-white border-b border-gray-100">
+      <View 
+        className="px-4 py-3 border-b"
+        style={{ 
+          backgroundColor: colors.card,
+          borderColor: colors.border
+        }}
+      >
         <ProgressBar 
           progress={(currentStep / 3) * 100} 
           total={3} 
@@ -411,7 +494,13 @@ export default function SymptomsPage() {
       {currentStep === 3 && renderStep3()}
 
       {/* Navigation Buttons */}
-      <View className="p-4 bg-white border-t border-gray-100">
+      <View 
+        className="p-4 border-t"
+        style={{ 
+          backgroundColor: colors.card,
+          borderColor: colors.border
+        }}
+      >
         <View className="flex-row gap-3">
           {currentStep > 1 && (
             <View className="flex-1">

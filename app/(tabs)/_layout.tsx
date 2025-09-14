@@ -1,9 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs, usePathname } from "expo-router";
 import { Text, View } from "react-native";
+import { useAppTheme } from "../../components/ThemeProvider";
 
 // Custom tab icon with badge for alerts
 const AlertsTabIcon = ({ color, size }: { color: string; size: number }) => {
+  const { colors } = useAppTheme();
   // Mock unread count - in a real app, this would come from a global state/context
   const unreadCount = 2; // This matches our mock data (2 unread alerts)
   
@@ -11,7 +13,10 @@ const AlertsTabIcon = ({ color, size }: { color: string; size: number }) => {
     <View className="relative">
       <Ionicons name="alert-circle" size={size} color={color} />
       {unreadCount > 0 && (
-        <View className="absolute -top-2 -right-2 bg-red-500 rounded-full min-w-[18px] h-[18px] items-center justify-center px-1">
+        <View 
+          className="absolute -top-2 -right-2 rounded-full min-w-[18px] h-[18px] items-center justify-center px-1"
+          style={{ backgroundColor: colors.error }}
+        >
           <Text className="text-white text-xs font-bold">
             {unreadCount > 9 ? '9+' : unreadCount}
           </Text>
@@ -23,6 +28,7 @@ const AlertsTabIcon = ({ color, size }: { color: string; size: number }) => {
 
 export default function TabsLayout() {
   const pathname = usePathname();
+  const { colors } = useAppTheme();
   
   // Hide tab bar on form screens
   const hideTabBar = pathname.includes('/water') || 
@@ -32,9 +38,13 @@ export default function TabsLayout() {
   return (
     <Tabs 
       screenOptions={{ 
-        tabBarActiveTintColor: "black", 
-        tabBarInactiveTintColor: "gray",
-        tabBarStyle: hideTabBar ? { display: 'none' } : undefined,
+        tabBarActiveTintColor: colors.primary, 
+        tabBarInactiveTintColor: colors.mutedForeground,
+        tabBarStyle: hideTabBar ? { display: 'none' } : {
+          backgroundColor: colors.background,
+          borderTopColor: colors.border,
+          borderTopWidth: 1,
+        },
         headerShown: false,
       }}
     >

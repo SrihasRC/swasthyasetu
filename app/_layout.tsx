@@ -1,15 +1,29 @@
 import { Slot } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { View } from 'react-native';
+import { ThemeProvider, useAppTheme } from '../components/ThemeProvider';
 import './globals.css';
 
-export default function RootLayout() {
+function RootContent() {
+  const { colors, isDark } = useAppTheme();
+  
   return (
     <>
-      <StatusBar style="dark" />
-      <View className="flex-1 bg-black">
+      <StatusBar style={isDark ? "light" : "dark"} />
+      <View 
+        className="flex-1"
+        style={{ backgroundColor: colors.background }}
+      >
         <Slot />
       </View>
     </>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <ThemeProvider>
+      <RootContent />
+    </ThemeProvider>
   );
 }

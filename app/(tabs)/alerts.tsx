@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import AlertDetailsModal from '../../components/AlertDetailsModal';
 import Header from '../../components/Header';
+import { useAppTheme } from '../../components/ThemeProvider';
 import { Alert } from '../../types/alert';
 
 const mockAlerts: Alert[] = [
@@ -51,6 +52,7 @@ const mockAlerts: Alert[] = [
 ];
 
 export default function AlertsScreen() {
+  const { colors } = useAppTheme();
   const [refreshing, setRefreshing] = useState(false);
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
   const [showDetails, setShowDetails] = useState(false);
@@ -58,31 +60,21 @@ export default function AlertsScreen() {
 
   const getRiskColor = (level: Alert['riskLevel']) => {
     switch (level) {
-      case 'HIGH': return 'bg-red-500';
-      case 'MEDIUM': return 'bg-orange-500';
-      case 'LOW': return 'bg-yellow-500';
-      case 'RESOLVED': return 'bg-green-500';
-      default: return 'bg-gray-500';
+      case 'HIGH': return colors.riskCritical;
+      case 'MEDIUM': return colors.riskMedium;
+      case 'LOW': return colors.riskLow;
+      case 'RESOLVED': return colors.success;
+      default: return colors.mutedForeground;
     }
   };
 
   const getRiskBorderColor = (level: Alert['riskLevel']) => {
     switch (level) {
-      case 'HIGH': return 'border-red-500';
-      case 'MEDIUM': return 'border-orange-500';
-      case 'LOW': return 'border-yellow-500';
-      case 'RESOLVED': return 'border-green-500';
-      default: return 'border-gray-500';
-    }
-  };
-
-  const getRiskLightBorder = (level: Alert['riskLevel']) => {
-    switch (level) {
-      case 'HIGH': return 'border-red-200';
-      case 'MEDIUM': return 'border-orange-200';
-      case 'LOW': return 'border-yellow-200';
-      case 'RESOLVED': return 'border-green-200';
-      default: return 'border-gray-200';
+      case 'HIGH': return colors.riskCritical;
+      case 'MEDIUM': return colors.riskMedium;
+      case 'LOW': return colors.riskLow;
+      case 'RESOLVED': return colors.success;
+      default: return colors.border;
     }
   };
 
@@ -116,15 +108,18 @@ export default function AlertsScreen() {
   const unreadCount = alerts.filter(a => !a.isRead).length;
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View className="flex-1" style={{ backgroundColor: colors.background }}>
       <Header 
         title="Alerts & Notices" 
         showBack={false}
         rightElement={
           <View className="relative">
-            <Ionicons name="notifications" size={24} color="#1F2937" />
+            <Ionicons name="notifications" size={24} color={colors.foreground} />
             {unreadCount > 0 && (
-              <View className="absolute -top-1 -right-1 bg-red-500 rounded-full w-5 h-5 items-center justify-center">
+              <View 
+                className="absolute -top-1 -right-1 rounded-full w-5 h-5 items-center justify-center"
+                style={{ backgroundColor: colors.error }}
+              >
                 <Text className="text-white text-xs font-bold">
                   {unreadCount > 9 ? '9+' : unreadCount}
                 </Text>
@@ -142,7 +137,10 @@ export default function AlertsScreen() {
         }
       >
         <View className="p-4">
-          <Text className="text-xl font-bold text-gray-900 mb-6">
+          <Text 
+            className="text-xl font-bold mb-6"
+            style={{ color: colors.foreground }}
+          >
             Recent Alerts
           </Text>
 
@@ -154,7 +152,13 @@ export default function AlertsScreen() {
               activeOpacity={0.8}
             >
               <View 
-                className={`p-5 rounded-xl border-l shadow-sm bg-white border ${getRiskBorderColor(alert.riskLevel)} ${getRiskLightBorder(alert.riskLevel)}`}
+                className="p-5 rounded-xl border-l-2 shadow-sm"
+                style={{ 
+                  backgroundColor: colors.card,
+                  borderLeftColor: getRiskBorderColor(alert.riskLevel),
+                  borderColor: colors.border,
+                  borderWidth: 1,
+                }}
               >
                 {/* Header Row */}
                 <View className="flex flex-row items-center justify-between mb-4">
@@ -162,9 +166,12 @@ export default function AlertsScreen() {
                       <Ionicons 
                         name={getRiskIcon(alert.type)} 
                         size={20} 
-                        color="#374151" 
+                        color={colors.mutedForeground}
                       />
-                    <View className={`px-3 py-1 rounded-full ${getRiskColor(alert.riskLevel)}`}>
+                    <View 
+                      className="px-3 py-1 rounded-full"
+                      style={{ backgroundColor: getRiskColor(alert.riskLevel) }}
+                    >
                       <Text className="text-xs font-bold text-white">
                         {alert.riskLevel}
                       </Text>
@@ -173,38 +180,66 @@ export default function AlertsScreen() {
                   
                   {/* Unread Indicator */}
                   {!alert.isRead ? (
-                    <View className="flex flex-row items-center bg-blue-100 px-3 py-1 rounded-full gap-2">
-                      <View className="w-2 h-2 bg-blue-500 rounded-full" />
-                      <Text className="text-xs font-bold text-blue-700">NEW</Text>
+                    <View 
+                      className="flex flex-row items-center px-3 py-1 rounded-full gap-2"
+                      style={{ backgroundColor: colors.primary + '20' }}
+                    >
+                      <View 
+                        className="w-2 h-2 rounded-full"
+                        style={{ backgroundColor: colors.primary }}
+                      />
+                      <Text 
+                        className="text-xs font-bold"
+                        style={{ color: colors.primary }}
+                      >
+                        NEW
+                      </Text>
                     </View>
                   ) : (
                     <View className="flex flex-row items-center gap-1">
-                      <Ionicons name="checkmark-circle" size={16} color="#059669" />
-                      <Text className="text-xs font-medium text-green-600">READ</Text>
+                      <Ionicons name="checkmark-circle" size={16} color={colors.success} />
+                      <Text 
+                        className="text-xs font-medium"
+                        style={{ color: colors.success }}
+                      >
+                        READ
+                      </Text>
                     </View>
                   )}
                 </View>
 
                 {/* Content */}
                 <View className="flex flex-col gap-3">
-                  <Text className="text-lg font-bold text-gray-900 leading-6">
+                  <Text 
+                    className="text-lg font-bold leading-6"
+                    style={{ color: colors.foreground }}
+                  >
                     {alert.title}
                   </Text>
                   
-                  <Text className="text-sm text-gray-600 leading-5">
+                  <Text 
+                    className="text-sm leading-5"
+                    style={{ color: colors.mutedForeground }}
+                  >
                     {alert.description}
                   </Text>
 
                   <View className="flex flex-row items-center justify-between">
                     <View className="flex flex-row items-center gap-2">
-                      <Ionicons name="location-outline" size={16} color="#6B7280" />
-                      <Text className="text-sm font-medium text-gray-700">
+                      <Ionicons name="location-outline" size={16} color={colors.mutedForeground} />
+                      <Text 
+                        className="text-sm font-medium"
+                        style={{ color: colors.foreground }}
+                      >
                         {alert.location}
                       </Text>
                     </View>
                     <View className="flex flex-row items-center gap-1">
-                      <Ionicons name="time-outline" size={14} color="#9CA3AF" />
-                      <Text className="text-xs text-gray-500 font-medium">
+                      <Ionicons name="time-outline" size={14} color={colors.mutedForeground} />
+                      <Text 
+                        className="text-xs font-medium"
+                        style={{ color: colors.mutedForeground }}
+                      >
                         {alert.timeAgo}
                       </Text>
                     </View>
@@ -212,8 +247,11 @@ export default function AlertsScreen() {
 
                   {alert.affectedCount && (
                     <View className="flex flex-row items-center gap-2">
-                      <Ionicons name="people-outline" size={16} color="#6B7280" />
-                      <Text className="text-sm text-gray-600 font-medium">
+                      <Ionicons name="people-outline" size={16} color={colors.mutedForeground} />
+                      <Text 
+                        className="text-sm font-medium"
+                        style={{ color: colors.mutedForeground }}
+                      >
                         {alert.affectedCount} cases affected
                       </Text>
                     </View>
@@ -221,13 +259,19 @@ export default function AlertsScreen() {
 
                   {/* Tap to view indicator */}
                   {alert.riskLevel !== 'RESOLVED' && (
-                    <View className="mt-2 pt-3 border-t border-gray-100">
+                    <View 
+                      className="mt-2 pt-3 border-t"
+                      style={{ borderColor: colors.border }}
+                    >
                       <View className="flex flex-row items-center justify-center py-2 gap-2">
-                        <Ionicons name="eye-outline" size={16} color="#6B7280" />
-                        <Text className="text-gray-600 text-sm font-medium">
+                        <Ionicons name="eye-outline" size={16} color={colors.mutedForeground} />
+                        <Text 
+                          className="text-sm font-medium"
+                          style={{ color: colors.mutedForeground }}
+                        >
                           Tap to view full details
                         </Text>
-                        <Ionicons name="chevron-forward-outline" size={14} color="#9CA3AF" />
+                        <Ionicons name="chevron-forward-outline" size={14} color={colors.mutedForeground} />
                       </View>
                     </View>
                   )}
@@ -238,55 +282,105 @@ export default function AlertsScreen() {
           
           {/* Emergency Contact Section */}
           <TouchableOpacity 
-            className="mt-6 bg-white p-4 rounded-xl border border-gray-200 shadow-sm"
+            className="mt-6 p-4 rounded-xl border shadow-sm"
+            style={{ 
+              backgroundColor: colors.card,
+              borderColor: colors.border,
+            }}
             onPress={() => {/* Handle emergency call */}}
             activeOpacity={0.8}
           >
             <View className="flex flex-row items-center justify-between">
               <View className="flex flex-row items-center gap-4">
-                <View className="bg-red-100 p-3 rounded-xl">
-                  <Ionicons name="call" size={24} color="#DC2626" />
+                <View 
+                  className="p-3 rounded-xl"
+                  style={{ backgroundColor: colors.error + '20' }}
+                >
+                  <Ionicons name="call" size={24} color={colors.error} />
                 </View>
                 <View className="flex flex-col gap-1">
-                  <Text className="font-bold text-gray-900 text-lg">Emergency: 108</Text>
-                  <Text className="text-xs text-gray-600">24/7 National Medical Helpline</Text>
+                  <Text 
+                    className="font-bold text-lg"
+                    style={{ color: colors.foreground }}
+                  >
+                    Emergency: 108
+                  </Text>
+                  <Text 
+                    className="text-xs"
+                    style={{ color: colors.mutedForeground }}
+                  >
+                    24/7 National Medical Helpline
+                  </Text>
                 </View>
               </View>
-              <View className="bg-red-600 px-5 py-3 rounded-xl shadow-sm">
+              <View 
+                className="px-5 py-3 rounded-xl shadow-sm"
+                style={{ backgroundColor: colors.error }}
+              >
                 <Text className="text-white font-bold text-sm">CALL NOW</Text>
               </View>
             </View>
           </TouchableOpacity>
           
           {/* Info Section */}
-            <View className="bg-blue-50 p-4 mt-6 rounded-lg">
-              <View className="flex-row items-center mb-3">
-                <Ionicons name="information-circle" size={20} color="#1E40AF" />
-                <Text className="text-blue-900 font-semibold ml-2">
-                  Alert Guidelines
+          <View 
+            className="p-4 mt-6 rounded-lg"
+            style={{ backgroundColor: colors.primary + '15' }}
+          >
+            <View className="flex-row items-center mb-3">
+              <Ionicons name="information-circle" size={20} color={colors.primary} />
+              <Text 
+                className="font-semibold ml-2"
+                style={{ color: colors.primary }}
+              >
+                Alert Guidelines
+              </Text>
+            </View>
+            <View className="space-y-2">
+              <View className="flex-row items-start">
+                <Text 
+                  className="text-sm mr-2"
+                  style={{ color: colors.primary }}
+                >
+                  •
+                </Text>
+                <Text 
+                  className="text-sm flex-1"
+                  style={{ color: colors.primary }}
+                >
+                  Alerts are updated in real-time when network is available
                 </Text>
               </View>
-              <View className="space-y-2">
-                <View className="flex-row items-start">
-                  <Text className="text-blue-800 text-sm mr-2">•</Text>
-                  <Text className="text-blue-800 text-sm flex-1">
-                    Alerts are updated in real-time when network is available
-                  </Text>
-                </View>
-                <View className="flex-row items-start">
-                  <Text className="text-blue-800 text-sm mr-2">•</Text>
-                  <Text className="text-blue-800 text-sm flex-1">
-                    High-risk alerts require immediate attention
-                  </Text>
-                </View>
-                <View className="flex-row items-start">
-                  <Text className="text-blue-800 text-sm mr-2">•</Text>
-                  <Text className="text-blue-800 text-sm flex-1">
-                    Pull down to refresh for latest updates
-                  </Text>
-                </View>
+              <View className="flex-row items-start">
+                <Text 
+                  className="text-sm mr-2"
+                  style={{ color: colors.primary }}
+                >
+                  •
+                </Text>
+                <Text 
+                  className="text-sm flex-1"
+                  style={{ color: colors.primary }}
+                >
+                  High-risk alerts require immediate attention
+                </Text>
+              </View>
+              <View className="flex-row items-start">
+                <Text 
+                  className="text-sm mr-2"
+                  style={{ color: colors.primary }}
+                >
+                  •
+                </Text>
+                <Text 
+                  className="text-sm flex-1"
+                  style={{ color: colors.primary }}
+                >
+                  Pull down to refresh for latest updates
+                </Text>
               </View>
             </View>
+          </View>
           </View>
       </ScrollView>
 
