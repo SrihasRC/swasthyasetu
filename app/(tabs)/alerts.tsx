@@ -54,9 +54,11 @@ const mockAlerts: Alert[] = [
 export default function AlertsScreen() {
   const { colors } = useAppTheme();
   const [refreshing, setRefreshing] = useState(false);
-  const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
-  const [showDetails, setShowDetails] = useState(false);
   const [alerts, setAlerts] = useState<Alert[]>(mockAlerts);
+  
+  // Modal state for AlertDetailsModal
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
 
   const getRiskColor = (level: Alert['riskLevel']) => {
     switch (level) {
@@ -98,7 +100,7 @@ export default function AlertsScreen() {
 
   const handleAlertPress = (alert: Alert) => {
     setSelectedAlert(alert);
-    setShowDetails(true);
+    setModalVisible(true);
     // Mark as read
     setAlerts(prev => 
       prev.map(a => a.id === alert.id ? { ...a, isRead: true } : a)
@@ -383,12 +385,15 @@ export default function AlertsScreen() {
           </View>
           </View>
       </ScrollView>
-
+      
       {/* Alert Details Modal */}
       <AlertDetailsModal
-        visible={showDetails}
+        visible={modalVisible}
         alert={selectedAlert}
-        onClose={() => setShowDetails(false)}
+        onClose={() => {
+          setModalVisible(false);
+          setSelectedAlert(null);
+        }}
       />
     </View>
   );

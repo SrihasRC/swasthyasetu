@@ -16,7 +16,4 @@ export interface AlertDetailsModalProps {
   visible: boolean;
   alert: Alert | null;
   onClose: () => void;
-  onReport?: (alert: Alert) => void;
-  onEmergencyCall?: (alert: Alert) => void;
-  onShare?: (alert: Alert) => void;
 }
