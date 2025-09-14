@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert as RNAlert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import Alert from '../../../components/Alert';
 import Button from '../../../components/Button';
 import Card from '../../../components/Card';
@@ -22,6 +23,7 @@ interface FormData {
 
 export default function SymptomsPage() {
   const { colors } = useAppTheme();
+  const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({
     village: '',
@@ -36,12 +38,12 @@ export default function SymptomsPage() {
   const [loading, setLoading] = useState(false);
 
   const symptomOptions = [
-    { id: 'diarrhea', label: 'Diarrhea', icon: 'medical-outline' },
-    { id: 'vomiting', label: 'Vomiting', icon: 'medical-outline' },
-    { id: 'fever', label: 'Fever', icon: 'thermometer-outline' },
-    { id: 'stomach_pain', label: 'Stomach Pain', icon: 'medical-outline' },
-    { id: 'dehydration', label: 'Dehydration', icon: 'water-outline' },
-    { id: 'nausea', label: 'Nausea', icon: 'medical-outline' }
+    { id: 'diarrhea', label: t('symptoms.diarrhea'), icon: 'medical-outline' },
+    { id: 'vomiting', label: t('symptoms.vomiting'), icon: 'medical-outline' },
+    { id: 'fever', label: t('symptoms.fever'), icon: 'thermometer-outline' },
+    { id: 'stomach_pain', label: t('symptoms.bodyAche'), icon: 'medical-outline' },
+    { id: 'dehydration', label: t('symptoms.fatigue'), icon: 'water-outline' },
+    { id: 'nausea', label: t('symptoms.nausea'), icon: 'medical-outline' }
   ];
 
   const villages = [

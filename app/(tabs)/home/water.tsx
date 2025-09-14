@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert as RNAlert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import Alert from '../../../components/Alert';
 import Button from '../../../components/Button';
 import Card from '../../../components/Card';
@@ -29,6 +30,7 @@ interface WaterFormData {
 
 export default function WaterQualityPage() {
   const { colors } = useAppTheme();
+  const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<WaterFormData>({
     location: '',
@@ -259,19 +261,19 @@ export default function WaterQualityPage() {
 
   const renderStep1 = () => (
     <ScrollView className="flex-1 p-4" showsVerticalScrollIndicator={false}>
-      <Text style={{color: colors.foreground}} className="text-xl font-bold mb-6">Water Source Information</Text>
+      <Text style={{color: colors.foreground}} className="text-xl font-bold mb-6">{t('water.sourceInformation')}</Text>
       
       {/* Location Input */}
       <View className="flex-row gap-3 items-end mb-4">
         <View className="flex-1">
           <Input
-            label="Collection Location"
+            label={t('water.collectionLocation')}
             value={formData.location}
             onChangeText={(text) => {
               setFormData({...formData, location: text});
               if (errors.location) setErrors(prev => ({ ...prev, location: '' }));
             }}
-            placeholder="Enter location (e.g., Village name, area)"
+            placeholder={t('water.locationPlaceholder')}
             required
             error={errors.location}
           />
@@ -294,7 +296,7 @@ export default function WaterQualityPage() {
 
       {/* Water Source Type */}
       <Text style={{color: colors.mutedForeground}} className="font-medium mb-2">
-        Water Source Type
+        {t('water.sourceType')}
         <Text className="text-red-500 ml-1">*</Text>
       </Text>
       <View className="flex flex-col gap-2 mb-4">
@@ -331,21 +333,21 @@ export default function WaterQualityPage() {
 
       {/* GPS Coordinates */}
       <Input
-        label="GPS Coordinates (Optional)"
+        label={t('water.gpsCoordinates')}
         value={formData.coordinates}
         onChangeText={(text) => setFormData({...formData, coordinates: text})}
-        placeholder="Latitude, Longitude"
+        placeholder={t('water.coordinatesPlaceholder')}
       />
 
       {/* Collector Name */}
       <Input
-        label="Collector Name"
+        label={t('water.collectorName')}
         value={formData.collectorName}
         onChangeText={(text) => {
           setFormData({...formData, collectorName: text});
           if (errors.collectorName) setErrors(prev => ({ ...prev, collectorName: '' }));
         }}
-        placeholder="Enter your full name"
+        placeholder={t('water.collectorPlaceholder')}
         required
         error={errors.collectorName}
       />
@@ -354,7 +356,7 @@ export default function WaterQualityPage() {
       <View className="flex-row gap-3 items-end mb-4">
         <View className="flex-1">
           <Input
-            label="Collection Date"
+            label={t('water.collectionDate')}
             value={formData.collectionDate}
             onChangeText={(text) => {
               setFormData({...formData, collectionDate: text});
@@ -378,7 +380,7 @@ export default function WaterQualityPage() {
 
   const renderStep2 = () => (
     <ScrollView className="flex-1 p-4" showsVerticalScrollIndicator={false}>
-      <Text style={{color: colors.foreground}} className="text-xl font-bold mb-6">Water Quality Parameters</Text>
+      <Text style={{color: colors.foreground}} className="text-xl font-bold mb-6">{t('water.parameters')}</Text>
       
       {/* pH Level */}
       <View className="mb-4">
@@ -537,7 +539,7 @@ export default function WaterQualityPage() {
 
       {/* Smell */}
       <Text style={{color: colors.mutedForeground}} className="font-medium mb-2">
-        Smell/Odor
+        {t('water.smell')}
       </Text>
       <View className="flex flex-col gap-2 mb-4">
         {qualityOptions.smell.map((option) => (
@@ -567,7 +569,7 @@ export default function WaterQualityPage() {
 
       {/* Color */}
       <Text style={{color: colors.mutedForeground}} className="font-medium mb-2">
-        Water Color/Appearance
+        {t('water.color')}
       </Text>
       <View className="flex flex-col gap-2 mb-4">
         {qualityOptions.color.map((option) => (
@@ -597,7 +599,7 @@ export default function WaterQualityPage() {
 
       {/* Taste */}
       <Text style={{color: colors.mutedForeground}} className="font-medium mb-2">
-        Taste
+        {t('water.taste')}
       </Text>
       <View className="flex flex-col gap-2 mb-6">
         {qualityOptions.taste.map((option) => (
@@ -629,34 +631,34 @@ export default function WaterQualityPage() {
 
   const renderStep3 = () => (
     <ScrollView className="flex-1 p-4" showsVerticalScrollIndicator={false}>
-      <Text style={{color: colors.foreground}} className="text-xl font-bold mb-6">Review & Submit</Text>
+      <Text style={{color: colors.foreground}} className="text-xl font-bold mb-6">{t('water.reviewSubmit')}</Text>
       
-      <Card variant="elevated" title="Water Quality Report Summary">
+      <Card variant="elevated" title={t('water.reportSummary')}>
         <View className="flex flex-col gap-3">
           <View className="flex-row justify-between">
-            <Text style={{color: colors.mutedForeground}}>Location:</Text>
+            <Text style={{color: colors.mutedForeground}}>{t('water.location')}:</Text>
             <Text style={{color: colors.foreground}} className="font-medium">{formData.location}</Text>
           </View>
           <View className="flex-row justify-between">
-            <Text style={{color: colors.mutedForeground}}>Source Type:</Text>
+            <Text style={{color: colors.mutedForeground}}>{t('water.sourceType')}:</Text>
             <Text style={{color: colors.foreground}} className="font-medium capitalize">
               {waterSources.find(s => s.id === formData.sourceType)?.label}
             </Text>
           </View>
           <View className="flex-row justify-between">
-            <Text style={{color: colors.mutedForeground}}>Collector:</Text>
+            <Text style={{color: colors.mutedForeground}}>{t('water.collector')}:</Text>
             <Text style={{color: colors.foreground}} className="font-medium">{formData.collectorName}</Text>
           </View>
           <View className="flex-row justify-between">
-            <Text style={{color: colors.mutedForeground}}>Collection Date:</Text>
+            <Text style={{color: colors.mutedForeground}}>{t('water.collectionDate')}:</Text>
             <Text style={{color: colors.foreground}} className="font-medium">{formData.collectionDate}</Text>
           </View>
           
           <View style={{borderTopColor: colors.border}} className="border-t pt-3 mt-3">
-            <Text style={{color: colors.foreground}} className="font-medium mb-2">Test Results:</Text>
+            <Text style={{color: colors.foreground}} className="font-medium mb-2">{t('water.testResults')}:</Text>
             <View className="flex flex-col gap-2">
               <View className="flex-row justify-between">
-                <Text style={{color: colors.mutedForeground}}>pH Level:</Text>
+                <Text style={{color: colors.mutedForeground}}>{t('water.phLevel')}:</Text>
                 <Text className={`font-medium ${
                   parseFloat(formData.pH) >= 6.5 && parseFloat(formData.pH) <= 8.5
                     ? 'text-green-600' : 'text-red-600'
@@ -665,15 +667,15 @@ export default function WaterQualityPage() {
                 </Text>
               </View>
               <View className="flex-row justify-between">
-                <Text style={{color: colors.mutedForeground}}>Turbidity:</Text>
+                <Text style={{color: colors.mutedForeground}}>{t('water.turbidity')}:</Text>
                 <Text style={{color: colors.foreground}} className="font-medium">{formData.turbidity} NTU</Text>
               </View>
               <View className="flex-row justify-between">
-                <Text style={{color: colors.mutedForeground}}>Free Chlorine:</Text>
+                <Text style={{color: colors.mutedForeground}}>{t('water.chlorine')}:</Text>
                 <Text style={{color: colors.foreground}} className="font-medium">{formData.chlorine} mg/L</Text>
               </View>
               <View className="flex-row justify-between">
-                <Text style={{color: colors.mutedForeground}}>Bacteria Count:</Text>
+                <Text style={{color: colors.mutedForeground}}>{t('water.bacteria')}:</Text>
                 <Text className={`font-medium ${
                   parseFloat(formData.bacteria) === 0 ? 'text-green-600' : 'text-red-600'
                 }`}>
@@ -682,7 +684,7 @@ export default function WaterQualityPage() {
               </View>
               {formData.smell && (
                 <View className="flex-row justify-between">
-                  <Text style={{color: colors.mutedForeground}}>Smell:</Text>
+                  <Text style={{color: colors.mutedForeground}}>{t('water.smell')}:</Text>
                   <Text style={{color: colors.foreground}} className="font-medium capitalize">
                     {qualityOptions.smell.find(s => s.id === formData.smell)?.label}
                   </Text>
@@ -690,7 +692,7 @@ export default function WaterQualityPage() {
               )}
               {formData.color && (
                 <View className="flex-row justify-between">
-                  <Text style={{color: colors.mutedForeground}}>Color:</Text>
+                  <Text style={{color: colors.mutedForeground}}>{t('water.color')}:</Text>
                   <Text style={{color: colors.foreground}} className="font-medium capitalize">
                     {qualityOptions.color.find(c => c.id === formData.color)?.label}
                   </Text>
@@ -698,7 +700,7 @@ export default function WaterQualityPage() {
               )}
               {formData.taste && (
                 <View className="flex-row justify-between">
-                  <Text style={{color: colors.mutedForeground}}>Taste:</Text>
+                  <Text style={{color: colors.mutedForeground}}>{t('water.taste')}:</Text>
                   <Text style={{color: colors.foreground}} className="font-medium capitalize">
                     {qualityOptions.taste.find(t => t.id === formData.taste)?.label}
                   </Text>
@@ -713,18 +715,18 @@ export default function WaterQualityPage() {
 
       {/* Additional Notes */}
       <Input
-        label="Additional Notes (Optional)"
+        label={t('water.additionalNotes')}
         value={formData.notes}
         onChangeText={(text) => setFormData({...formData, notes: text})}
-        placeholder="Any additional observations about water quality"
+        placeholder={t('water.notesPlaceholder')}
         multiline
         numberOfLines={3}
       />
 
       <Alert
         type="info"
-        title="Report Submission"
-        message="This water quality report will be shared with environmental and health authorities for analysis and necessary action."
+        title={t('water.reportSubmissionTitle')}
+        message={t('water.reportSubmissionMessage')}
       />
 
       <View className="h-6" />
@@ -734,7 +736,7 @@ export default function WaterQualityPage() {
   return (
     <View className="flex-1" style={{ backgroundColor: colors.background }}>
       <Header
-        title="Water Quality Report"
+        title={t('water.title')}
         showBack
         onBackPress={() => router.back()}
       />
@@ -756,7 +758,7 @@ export default function WaterQualityPage() {
           className="text-sm mt-2 text-center"
           style={{ color: colors.mutedForeground }}
         >
-          Step {currentStep} of 3
+          {t('water.stepProgress', { current: currentStep, total: 3 })}
         </Text>
       </View>
 
@@ -770,7 +772,7 @@ export default function WaterQualityPage() {
           {currentStep > 1 && (
             <View className="flex-1">
               <Button
-                title="Back"
+                title={t('common.back')}
                 onPress={() => setCurrentStep(currentStep - 1)}
                 variant="secondary"
               />
@@ -779,13 +781,13 @@ export default function WaterQualityPage() {
           <View className="flex-1">
             {currentStep < 3 ? (
               <Button
-                title="Next"
+                title={t('common.next')}
                 onPress={handleNext}
                 variant="primary"
               />
             ) : (
               <Button
-                title="Submit Report"
+                title={t('water.submitReport')}
                 onPress={handleSubmit}
                 variant="primary"
                 loading={loading}

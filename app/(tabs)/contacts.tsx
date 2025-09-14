@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { Alert, Linking, RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import Header from '../../components/Header';
 import { useAppTheme } from '../../components/ThemeProvider';
 
@@ -68,6 +69,7 @@ const emergencyContacts: EmergencyContact[] = [
 
 export default function ContactsScreen() {
   const { colors } = useAppTheme();
+  const { t } = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = async () => {
@@ -130,8 +132,8 @@ export default function ContactsScreen() {
   return (
     <View className="flex-1" style={{ backgroundColor: colors.background }}>
       <Header 
-        title="Emergency Contacts" 
-        subtitle="Get Help When You Need It"
+        title={t('contacts.title')} 
+        subtitle={t('contacts.subtitle')}
       />
       
       <ScrollView 
@@ -155,7 +157,7 @@ export default function ContactsScreen() {
                 className="text-xl font-bold"
                 style={{ color: colors.foreground }}
               >
-                Emergency
+                {t('contacts.emergency')}
               </Text>
             </View>
             
@@ -215,7 +217,7 @@ export default function ContactsScreen() {
                       className="px-3 py-2 rounded-lg"
                       style={{ backgroundColor: colors.error }}
                     >
-                      <Text className="text-white font-bold text-xs">CALL</Text>
+                      <Text className="text-white font-bold text-xs">{t('contacts.call').toUpperCase()}</Text>
                     </View>
                   </View>
                 </TouchableOpacity>
@@ -236,7 +238,7 @@ export default function ContactsScreen() {
                 className="text-xl font-bold"
                 style={{ color: colors.foreground }}
               >
-                Health Centers
+                {t('contacts.healthDepartment')}
               </Text>
             </View>
             
@@ -308,7 +310,7 @@ export default function ContactsScreen() {
                       style={{ backgroundColor: colors.success }}
                     >
                       <Ionicons name="call-outline" size={16} color="white" />
-                      <Text className="text-white font-bold text-sm">Call</Text>
+                      <Text className="text-white font-bold text-sm">{t('contacts.call')}</Text>
                     </TouchableOpacity>
                     
                     <TouchableOpacity 
@@ -321,7 +323,7 @@ export default function ContactsScreen() {
                         className="font-bold"
                         style={{ color: colors.foreground }}
                       >
-                        Direction
+                        {t('contacts.location')}
                       </Text>
                     </TouchableOpacity>
                   </View>
@@ -343,7 +345,7 @@ export default function ContactsScreen() {
                 className="text-xl font-bold"
                 style={{ color: colors.foreground }}
               >
-                Health Officials
+                {t('contacts.municipalOffice')}
               </Text>
             </View>
             

@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { Alert, RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import Header from '../../components/Header';
 import { useAppTheme } from '../../components/ThemeProvider';
 import TutorialDetailModal from '../../components/TutorialDetailModal';
@@ -86,6 +87,7 @@ const recentGuides: TutorialGuide[] = [
 
 export default function TutorialsScreen() {
   const { colors } = useAppTheme();
+  const { t } = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
   const [selectedGuide, setSelectedGuide] = useState<TutorialGuide | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -139,8 +141,8 @@ export default function TutorialsScreen() {
   return (
     <View className="flex-1" style={{ backgroundColor: colors.background }}>
       <Header 
-        title="Health Education" 
-        subtitle="Learn & Stay Healthy"
+        title={t('tutorials.title')} 
+        subtitle={t('tutorials.subtitle')}
       />
       
       <ScrollView 
@@ -157,7 +159,7 @@ export default function TutorialsScreen() {
               className="text-xl font-bold mb-4"
               style={{ color: colors.foreground }}
             >
-              Categories
+              {t('tutorials.categories')}
             </Text>
             
             <View className="flex flex-row flex-wrap gap-4">
@@ -226,14 +228,14 @@ export default function TutorialsScreen() {
                 className="text-xl font-bold"
                 style={{ color: colors.foreground }}
               >
-                Recent Guides
+                {t('tutorials.recent')}
               </Text>
               <TouchableOpacity className="flex flex-row items-center gap-1">
                 <Text 
                   className="font-semibold text-sm"
                   style={{ color: colors.primary }}
                 >
-                  View All
+                  {t('common.viewAll')}
                 </Text>
                 <Ionicons name="chevron-forward-outline" size={16} color={colors.primary} />
               </TouchableOpacity>

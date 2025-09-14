@@ -2,11 +2,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { Switch, Text, TouchableOpacity, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { useAppTheme } from '../../components/ThemeProvider';
+import LanguageToggle from '../components/LanguageToggle';
 
 export default function SettingsPage() {
   const router = useRouter();
   const { colors, isDark, toggleTheme } = useAppTheme();
+  const { t } = useTranslation();
 
   return (
     <View className='flex-1' style={{ backgroundColor: colors.background }}>
@@ -29,7 +32,7 @@ export default function SettingsPage() {
             className="text-xl font-semibold"
             style={{ color: colors.foreground }}
           >
-            Settings
+            {t('settings.title')}
           </Text>
         </View>
       </View>
@@ -40,7 +43,7 @@ export default function SettingsPage() {
           className='text-lg mb-4'
           style={{ color: colors.foreground }}
         >
-          App Settings
+          {t('settings.appSettings')}
         </Text>
         
         {/* Settings Options */}
@@ -64,14 +67,14 @@ export default function SettingsPage() {
                   className="font-medium"
                   style={{ color: colors.foreground }}
                 >
-                  {isDark ? 'Dark Mode' : 'Light Mode'}
+                  {isDark ? t('settings.darkMode') : t('settings.lightMode')}
                 </Text>
               </View>
               <Text 
                 className="text-sm mt-1"
                 style={{ color: colors.mutedForeground }}
               >
-                Toggle between light and dark themes
+                {t('settings.themeToggleDescription')}
               </Text>
             </View>
             <Switch
@@ -85,31 +88,35 @@ export default function SettingsPage() {
             />
           </View>
           
-          <TouchableOpacity 
+          {/* Language Settings */}
+          <View 
             className="p-4 rounded-lg border"
             style={{ 
               backgroundColor: colors.card,
               borderColor: colors.border,
             }}
           >
-            <View className="flex-row items-center gap-3">
-              <Ionicons name="language" size={20} color={colors.primary} />
-              <View>
-                <Text 
-                  className="font-medium"
-                  style={{ color: colors.foreground }}
-                >
-                  Language Settings
-                </Text>
+            <View className="flex-row items-center justify-between">
+              <View className="flex-1">
+                <View className="flex-row items-center gap-3">
+                  <Ionicons name="language" size={20} color={colors.primary} />
+                  <Text 
+                    className="font-medium"
+                    style={{ color: colors.foreground }}
+                  >
+                    {t('settings.languageSettings')}
+                  </Text>
+                </View>
                 <Text 
                   className="text-sm mt-1"
                   style={{ color: colors.mutedForeground }}
                 >
-                  Change app language
+                  {t('settings.languageDescription')}
                 </Text>
               </View>
+              <LanguageToggle />
             </View>
-          </TouchableOpacity>
+          </View>
           
           <TouchableOpacity 
             className="p-4 rounded-lg border"
@@ -125,13 +132,13 @@ export default function SettingsPage() {
                   className="font-medium"
                   style={{ color: colors.foreground }}
                 >
-                  Profile
+                  {t('settings.profile')}
                 </Text>
                 <Text 
                   className="text-sm mt-1"
                   style={{ color: colors.mutedForeground }}
                 >
-                  Manage your profile information
+                  {t('settings.profileDescription')}
                 </Text>
               </View>
             </View>
@@ -151,13 +158,13 @@ export default function SettingsPage() {
                   className="font-medium"
                   style={{ color: colors.foreground }}
                 >
-                  Notifications
+                  {t('settings.notifications')}
                 </Text>
                 <Text 
                   className="text-sm mt-1"
                   style={{ color: colors.mutedForeground }}
                 >
-                  Configure alerts and notifications
+                  {t('settings.notificationsDescription')}
                 </Text>
               </View>
             </View>
@@ -169,7 +176,7 @@ export default function SettingsPage() {
               className="text-lg mb-4"
               style={{ color: colors.foreground }}
             >
-              About
+              {t('settings.about')}
             </Text>
             
             <View 
@@ -185,20 +192,20 @@ export default function SettingsPage() {
                   className="font-medium"
                   style={{ color: colors.foreground }}
                 >
-                  SwasthyaSetu
+                  {t('settings.appName')}
                 </Text>
               </View>
               <Text 
                 className="text-sm mb-2"
                 style={{ color: colors.mutedForeground }}
               >
-                Version 1.0.0
+                {t('settings.versionNumber')}
               </Text>
               <Text 
                 className="text-sm"
                 style={{ color: colors.mutedForeground }}
               >
-                Government of India health monitoring app for rural communities
+                {t('settings.appDescription')}
               </Text>
             </View>
           </View>

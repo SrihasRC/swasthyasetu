@@ -3,6 +3,8 @@ import { StatusBar } from 'expo-status-bar';
 import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeProvider, useAppTheme } from '../components/ThemeProvider';
+import { LanguageProvider } from './contexts/LanguageContext';
+import './i18n'; // Initialize i18n
 import './globals.css';
 
 function RootContent() {
@@ -32,9 +34,11 @@ function RootContent() {
 export default function RootLayout() {
   return (
     <SafeAreaProvider>
-      <ThemeProvider>
-        <RootContent />
-      </ThemeProvider>
+      <LanguageProvider>
+        <ThemeProvider>
+          <RootContent />
+        </ThemeProvider>
+      </LanguageProvider>
     </SafeAreaProvider>
   );
 }

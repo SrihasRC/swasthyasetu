@@ -1,11 +1,13 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { useTranslation } from 'react-i18next';
 import { useAppTheme } from "../../../components/ThemeProvider";
 import Tile from "../../../components/Tile";
 
 export default function HomePage() {
   const { colors } = useAppTheme();
+  const { t } = useTranslation();
   
   return (
     <View className="flex-1" style={{ backgroundColor: colors.background }}>
@@ -27,13 +29,13 @@ export default function HomePage() {
               className="text-2xl font-bold"
               style={{ color: colors.foreground }}
             >
-              SwasthyaSetu
+              {t('home.title')}
             </Text>
             <Text 
               className="text-sm mt-1"
               style={{ color: colors.mutedForeground }}
             >
-              स्वास्थ्यसेतु - Bridge to Health
+              {t('home.subtitle')}
             </Text>
           </View>
           <View className="flex-row space-x-2 gap-2">
@@ -102,7 +104,7 @@ export default function HomePage() {
           className="text-lg font-semibold mb-4"
           style={{ color: colors.foreground }}
         >
-          Quick Actions
+          {t('home.quickActions')}
         </Text>
         
         {/* Main Action Grid */}
@@ -110,8 +112,8 @@ export default function HomePage() {
           <View className="w-[48%] mb-4">
             <Link href="/home/symptoms" asChild>
               <Tile
-                title="Report Case"
-                description="Submit health reports"
+                title={t('home.reportSymptoms')}
+                description={t('home.reportSymptomsDesc')}
                 icon={<Ionicons name="medical-outline" size={32} color={colors.error} />}
                 onPress={() => {}}
               />
@@ -121,8 +123,8 @@ export default function HomePage() {
           <View className="w-[48%] mb-4">
             <Link href="/home/water" asChild>
               <Tile
-                title="Water Quality"
-                description="Test & report water"
+                title={t('home.testWater')}
+                description={t('home.testWaterDesc')}
                 icon={<Ionicons name="water-outline" size={32} color={colors.primary} />}
                 onPress={() => {}}
               />
@@ -132,8 +134,8 @@ export default function HomePage() {
           <View className="w-[48%] mb-4">
             <Link href="/alerts" asChild>
               <Tile
-                title="Alerts"
-                description="Community warnings"
+                title={t('navigation.alerts')}
+                description={t('alerts.title')}
                 icon={<Ionicons name="warning-outline" size={32} color={colors.warning} />}
                 onPress={() => {}}
               />
@@ -143,8 +145,8 @@ export default function HomePage() {
           <View className="w-[48%] mb-4">
             <Link href="/tutorials" asChild>
               <Tile
-                title="Learn & Guide"
-                description="Health education"
+                title={t('navigation.tutorials')}
+                description={t('tutorials.subtitle')}
                 icon={<Ionicons name="library-outline" size={32} color={colors.success} />}
                 onPress={() => {}}
               />
@@ -157,7 +159,7 @@ export default function HomePage() {
           className="text-lg font-semibold mb-4"
           style={{ color: colors.foreground }}
         >
-          Today&apos;s Summary
+          {t('home.todaySummary')}
         </Text>
         <View 
           className="p-4 rounded-xl border mb-6" 
@@ -179,7 +181,7 @@ export default function HomePage() {
                 className="text-sm"
                 style={{ color: colors.mutedForeground }}
               >
-                Reports
+                {t('home.reports')}
               </Text>
             </View>
             <View 
@@ -197,7 +199,7 @@ export default function HomePage() {
                 className="text-sm"
                 style={{ color: colors.mutedForeground }}
               >
-                Alerts
+                {t('navigation.alerts')}
               </Text>
             </View>
             <View 
@@ -215,7 +217,7 @@ export default function HomePage() {
                 className="text-sm"
                 style={{ color: colors.mutedForeground }}
               >
-                Resolved
+                {t('home.resolved')}
               </Text>
             </View>
           </View>
@@ -233,11 +235,11 @@ export default function HomePage() {
           <View className="flex-row items-center justify-center">
             <Ionicons name="alert-circle" size={24} color="#FFFFFF" />
             <Text className="text-white font-semibold text-lg ml-2">
-              Quick Emergency Report
+              {t('home.quickEmergencyReport')}
             </Text>
           </View>
           <Text className="text-red-100 text-sm text-center mt-1">
-            Tap for urgent health alerts
+            {t('home.urgentHealthAlerts')}
           </Text>
         </TouchableOpacity>
 
@@ -264,13 +266,13 @@ export default function HomePage() {
                     className="font-semibold"
                     style={{ color: colors.foreground }}
                   >
-                    Emergency: 108
+                    {t('home.emergencyCall')}
                   </Text>
                   <Text 
                     className="text-sm"
                     style={{ color: colors.mutedForeground }}
                   >
-                    24/7 Medical Help
+                    {t('home.medicalHelp')}
                   </Text>
                 </View>
               </View>

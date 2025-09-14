@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import AlertDetailsModal from '../../components/AlertDetailsModal';
 import Header from '../../components/Header';
 import { useAppTheme } from '../../components/ThemeProvider';
@@ -53,6 +54,7 @@ const mockAlerts: Alert[] = [
 
 export default function AlertsScreen() {
   const { colors } = useAppTheme();
+  const { t } = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
   const [alerts, setAlerts] = useState<Alert[]>(mockAlerts);
   
@@ -112,7 +114,7 @@ export default function AlertsScreen() {
   return (
     <View className="flex-1" style={{ backgroundColor: colors.background }}>
       <Header 
-        title="Alerts & Notices" 
+        title={t('alerts.title')} 
         showBack={false}
         rightElement={
           <View className="relative">
@@ -143,7 +145,7 @@ export default function AlertsScreen() {
             className="text-xl font-bold mb-6"
             style={{ color: colors.foreground }}
           >
-            Recent Alerts
+            {t('alerts.title')}
           </Text>
 
           {alerts.map((alert) => (
@@ -194,7 +196,7 @@ export default function AlertsScreen() {
                         className="text-xs font-bold"
                         style={{ color: colors.primary }}
                       >
-                        NEW
+                        {t('alerts.unread')}
                       </Text>
                     </View>
                   ) : (
@@ -305,13 +307,13 @@ export default function AlertsScreen() {
                     className="font-bold text-lg"
                     style={{ color: colors.foreground }}
                   >
-                    Emergency: 108
+                    {t('contacts.emergency')}: 108
                   </Text>
                   <Text 
                     className="text-xs"
                     style={{ color: colors.mutedForeground }}
                   >
-                    24/7 National Medical Helpline
+                    {t('contacts.available24x7')}
                   </Text>
                 </View>
               </View>
@@ -319,7 +321,7 @@ export default function AlertsScreen() {
                 className="px-5 py-3 rounded-xl shadow-sm"
                 style={{ backgroundColor: colors.error }}
               >
-                <Text className="text-white font-bold text-sm">CALL NOW</Text>
+                <Text className="text-white font-bold text-sm">{t('contacts.call')}</Text>
               </View>
             </View>
           </TouchableOpacity>
