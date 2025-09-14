@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useTranslation } from 'react-i18next';
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useAppTheme } from "../../../components/ThemeProvider";
 import Tile from "../../../components/Tile";
 

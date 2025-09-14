@@ -1,16 +1,16 @@
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Modal,
-  FlatList,
-  Dimensions,
+    Dimensions,
+    FlatList,
+    Modal,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { useAppTheme } from '../../components/ThemeProvider';
-import { useLanguage, getAvailableLanguages, Language } from '../contexts/LanguageContext';
+import { getAvailableLanguages, Language, useLanguage } from '../contexts/LanguageContext';
 
 interface LanguageSelectorProps {
   visible: boolean;

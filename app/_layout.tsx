@@ -4,8 +4,8 @@ import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeProvider, useAppTheme } from '../components/ThemeProvider';
 import { LanguageProvider } from './contexts/LanguageContext';
-import './i18n'; // Initialize i18n
 import './globals.css';
+import './i18n'; // Initialize i18n
 
 function RootContent() {
   const { colors, isDark } = useAppTheme();

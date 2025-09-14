@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { TouchableOpacity, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { Text, TouchableOpacity } from 'react-native';
 import { useAppTheme } from '../../components/ThemeProvider';
 import { useLanguage } from '../contexts/LanguageContext';
 import LanguageSelector from './LanguageSelector';

@@ -1,8 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert as RNAlert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { Alert as RNAlert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Alert from '../../../components/Alert';
 import Button from '../../../components/Button';
 import Card from '../../../components/Card';

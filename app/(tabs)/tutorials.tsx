@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { Alert, RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { Alert, RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Header from '../../components/Header';
 import { useAppTheme } from '../../components/ThemeProvider';
 import TutorialDetailModal from '../../components/TutorialDetailModal';

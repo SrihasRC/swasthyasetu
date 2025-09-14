@@ -1,8 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { Switch, Text, TouchableOpacity, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { Switch, Text, TouchableOpacity, View } from 'react-native';
 import { useAppTheme } from '../../components/ThemeProvider';
 import LanguageToggle from '../components/LanguageToggle';
 
