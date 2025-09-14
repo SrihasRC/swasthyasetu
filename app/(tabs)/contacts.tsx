@@ -167,7 +167,7 @@ export default function ContactsScreen() {
                   className="rounded-xl p-4 shadow-sm border-l"
                   style={{ 
                     backgroundColor: colors.card,
-                    borderLeftColor: colors.error,
+                    borderLeftColor: colors.border,
                     borderRightWidth: 1, 
                     borderTopWidth: 1, 
                     borderBottomWidth: 1, 

@@ -62,22 +62,22 @@ const lightColors = {
 
 const darkColors = {
   primary: '#3b82f6',
-  secondary: '#10b981',
+  secondary: '#22c55e',
   tertiary: '#06b6d4',
   success: '#22c55e',
-  warning: '#f59e0b',
+  warning: '#eab308',
   error: '#ef4444',
-  info: '#60a5fa',
+  info: '#3b82f6',
   riskCritical: '#ef4444',
-  riskHigh: '#f59e0b',
-  riskMedium: '#60a5fa',
+  riskHigh: '#eab308',
+  riskMedium: '#3b82f6',
   riskLow: '#22c55e',
-  background: '#0f172a',
-  card: '#1e293b',
-  muted: '#334155',
-  foreground: '#f1f5f9',
-  mutedForeground: '#94a3b8',
-  border: '#334155',
+  card: '#1b1f23',
+  background: '#0b0f13',
+  muted: '#27272a',
+  foreground: '#e4e6ea',
+  mutedForeground: '#a1a1aa',
+  border: '#27272a',
 };
 
 interface ThemeProviderProps {

@@ -13,7 +13,7 @@ export default function HomePage() {
       <View 
         className="px-4 pb-6 pt-12" 
         style={{ 
-          backgroundColor: colors.card,
+          backgroundColor: colors.background,
           elevation: 2,
           shadowColor: colors.foreground,
           shadowOffset: { width: 0, height: 2 },
@@ -25,7 +25,7 @@ export default function HomePage() {
           <View className="flex-1">
             <Text 
               className="text-2xl font-bold"
-              style={{ color: colors.primary }}
+              style={{ color: colors.foreground }}
             >
               SwasthyaSetu
             </Text>
@@ -39,24 +39,21 @@ export default function HomePage() {
           <View className="flex-row space-x-2 gap-2">
             <TouchableOpacity 
               className="p-2 rounded-full"
-              style={{ backgroundColor: colors.success + '20' }}
             >
-              <Ionicons name="wifi" size={20} color={colors.success} />
+              <Ionicons name="wifi" size={22} color={colors.success} />
             </TouchableOpacity>
             <Link href="/test-components" asChild>
               <TouchableOpacity 
                 className="p-2 rounded-full"
-                style={{ backgroundColor: colors.secondary + '20' }}
               >
-                <Ionicons name="construct-outline" size={20} color={colors.secondary} />
+                <Ionicons name="construct-outline" size={22} color={colors.secondary} />
               </TouchableOpacity>
             </Link>
             <Link href="/settings" asChild>
               <TouchableOpacity 
                 className="p-2 rounded-full"
-                style={{ backgroundColor: colors.muted }}
               >
-                <Ionicons name="settings-outline" size={20} color={colors.foreground} />
+                <Ionicons name="settings-outline" size={22} color={colors.foreground} />
               </TouchableOpacity>
             </Link>
           </View>

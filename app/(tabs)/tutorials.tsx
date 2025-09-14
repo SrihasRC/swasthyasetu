@@ -190,7 +190,7 @@ export default function TutorialsScreen() {
                       <View className="flex flex-col items-center gap-1">
                         <Text 
                           className="font-bold text-center text-sm leading-tight"
-                          style={{ color: category.color }}
+                          style={{ color: colors.foreground }}
                           numberOfLines={2}
                         >
                           {category.title}

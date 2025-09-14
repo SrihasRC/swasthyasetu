@@ -212,7 +212,7 @@ export default function SymptomsPage() {
       >
         Symptoms (select all that apply) <Text style={{ color: colors.error }}>*</Text>
       </Text>
-      <View className="flex flex-col gap-3 mb-4">
+      <View className="flex flex-col gap-3 mb-8">
         {symptomOptions.map((symptom) => (
           <TouchableOpacity
             key={symptom.id}
@@ -235,11 +235,6 @@ export default function SymptomsPage() {
                 <Ionicons name="checkmark" size={16} color="#FFFFFF" />
               )}
             </View>
-            <Ionicons 
-              name={symptom.icon as any} 
-              size={24} 
-              color={formData.symptoms.includes(symptom.id) ? colors.error : colors.mutedForeground} 
-            />
             <Text 
               className="ml-3 font-medium"
               style={{
@@ -477,7 +472,7 @@ export default function SymptomsPage() {
       <View 
         className="px-4 py-3 border-b"
         style={{ 
-          backgroundColor: colors.card,
+          backgroundColor: colors.background,
           borderColor: colors.border
         }}
       >
@@ -497,7 +492,7 @@ export default function SymptomsPage() {
       <View 
         className="p-4 border-t"
         style={{ 
-          backgroundColor: colors.card,
+          backgroundColor: colors.background,
           borderColor: colors.border
         }}
       >

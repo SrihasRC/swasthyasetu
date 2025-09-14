@@ -38,7 +38,7 @@ export default function TabsLayout() {
   return (
     <Tabs 
       screenOptions={{ 
-        tabBarActiveTintColor: colors.primary, 
+        tabBarActiveTintColor: colors.foreground, 
         tabBarInactiveTintColor: colors.mutedForeground,
         tabBarStyle: hideTabBar ? { display: 'none' } : {
           backgroundColor: colors.background,

@@ -14,7 +14,7 @@ export default function SettingsPage() {
       <View 
         className="px-4 pt-12 pb-4 border-b"
         style={{ 
-          backgroundColor: colors.card,
+          backgroundColor: colors.background,
           borderColor: colors.border,
         }}
       >

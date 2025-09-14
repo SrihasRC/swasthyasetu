@@ -26,7 +26,6 @@ export default function Header({
         <TouchableOpacity 
           onPress={onBackPress}
           className="p-2 mr-3 rounded-full"
-          style={{ backgroundColor: colors.muted }}
         >
           <Ionicons name="arrow-back" size={24} color={colors.foreground} />
         </TouchableOpacity>
@@ -40,7 +39,7 @@ export default function Header({
     <View 
       className="px-4 pt-12 pb-4 border-b" 
       style={{ 
-        backgroundColor: colors.card,
+        backgroundColor: colors.background,
         borderColor: colors.border,
         elevation: 2,
         shadowColor: colors.foreground,

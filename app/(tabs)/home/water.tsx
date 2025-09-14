@@ -742,7 +742,7 @@ export default function WaterQualityPage() {
       <View 
         className="px-4 py-3 border-b"
         style={{ 
-          backgroundColor: colors.card,
+          backgroundColor: colors.background,
           borderColor: colors.border
         }}
       >
