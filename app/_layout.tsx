@@ -1,6 +1,7 @@
 import { Slot } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeProvider, useAppTheme } from '../components/ThemeProvider';
 import './globals.css';
 
@@ -9,12 +10,20 @@ function RootContent() {
   
   return (
     <>
-      <StatusBar style={isDark ? "light" : "dark"} />
+      <StatusBar 
+        style={isDark ? "light" : "dark"} 
+        backgroundColor={colors.background}
+        translucent={false}
+      />
       <View 
         className="flex-1"
         style={{ backgroundColor: colors.background }}
       >
-        <Slot />
+        <Slot 
+          screenOptions={{
+            contentStyle: { backgroundColor: colors.background }
+          }}
+        />
       </View>
     </>
   );
@@ -22,8 +31,10 @@ function RootContent() {
 
 export default function RootLayout() {
   return (
-    <ThemeProvider>
-      <RootContent />
-    </ThemeProvider>
+    <SafeAreaProvider>
+      <ThemeProvider>
+        <RootContent />
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }
