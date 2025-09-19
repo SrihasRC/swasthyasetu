@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert as RNAlert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Alert as RNAlert, ScrollView, Text, TouchableOpacity, View, TextInput } from 'react-native';
 import Alert from '../../../components/Alert';
 import Button from '../../../components/Button';
 import Card from '../../../components/Card';
@@ -14,11 +14,25 @@ import { useAppTheme } from '../../../components/ThemeProvider';
 interface FormData {
   village: string;
   householdId: string;
-  patientCount: string;
-  symptoms: string[];
-  onsetDate: string;
+  patientCount: number; // numeric type for analytics
+  patientDetails?: {
+    age?: number;
+    gender?: 'male' | 'female' | 'other';
+    symptoms?: string[];
+  }[]; // optional: use for more granular data
+  symptoms: string[]; // e.g. ['diarrhea', 'vomiting'] - overall symptoms for backwards compatibility
+  onsetDate: string; // ISO format (YYYY-MM-DD)
   severity: 'mild' | 'moderate' | 'severe' | '';
-  notes: string;
+  notes?: string;
+  photoUrls?: string[]; // allow multiple files
+  gps?: {
+    lat: number;
+    lng: number;
+  }; // geotag for mapping
+  reporterId?: string; // app user or ASHA ID
+  reportDate?: string; // date/time of submission (auto-generated)
+  language?: string; // for multilingual reporting
+  contactNumber?: string; // useful for follow-up
 }
 
 export default function SymptomsPage() {
@@ -28,12 +42,15 @@ export default function SymptomsPage() {
   const [formData, setFormData] = useState<FormData>({
     village: '',
     householdId: '',
-    patientCount: '',
+    patientCount: 1,
+    patientDetails: [{ age: undefined, gender: undefined }],
     symptoms: [],
     onsetDate: '',
     severity: '',
     notes: ''
   });
+  
+  const [patientCountInput, setPatientCountInput] = useState<string>('1');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
@@ -55,16 +72,18 @@ export default function SymptomsPage() {
     'Other'
   ];
 
-  const toggleSymptom = (symptomId: string) => {
-    setFormData(prev => ({
-      ...prev,
-      symptoms: prev.symptoms.includes(symptomId)
-        ? prev.symptoms.filter(s => s !== symptomId)
-        : [...prev.symptoms, symptomId]
-    }));
-    if (errors.symptoms) {
-      setErrors(prev => ({ ...prev, symptoms: '' }));
-    }
+  const togglePatientSymptom = (patientIndex: number, symptomId: string) => {
+    setFormData(prev => {
+      const newDetails = [...(prev.patientDetails || [])];
+      const currentSymptoms = newDetails[patientIndex]?.symptoms || [];
+      newDetails[patientIndex] = {
+        ...newDetails[patientIndex],
+        symptoms: currentSymptoms.includes(symptomId)
+          ? currentSymptoms.filter(id => id !== symptomId)
+          : [...currentSymptoms, symptomId]
+      };
+      return { ...prev, patientDetails: newDetails };
+    });
   };
 
   const validateStep1 = () => {
@@ -72,17 +91,31 @@ export default function SymptomsPage() {
     
     if (!formData.village) newErrors.village = 'Village selection is required';
     if (!formData.householdId) newErrors.householdId = 'Household ID is required';
-    if (!formData.patientCount) newErrors.patientCount = 'Patient count is required';
-    else if (isNaN(Number(formData.patientCount)) || Number(formData.patientCount) < 1) {
-      newErrors.patientCount = 'Please enter a valid number';
+    if (!patientCountInput || parseInt(patientCountInput) < 1) {
+      newErrors.patientCount = 'Please enter a valid number of patients (at least 1)';
     }
-    if (formData.symptoms.length === 0) newErrors.symptoms = 'Please select at least one symptom';
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const validateStep2 = () => {
+    const newErrors: Record<string, string> = {};
+    
+    // Check if at least one patient has symptoms
+    const hasAnySymptoms = formData.patientDetails?.some(patient => 
+      patient.symptoms && patient.symptoms.length > 0
+    );
+    
+    if (!hasAnySymptoms) {
+      newErrors.symptoms = 'Please select at least one symptom for any patient';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const validateStep3 = () => {
     const newErrors: Record<string, string> = {};
     
     if (!formData.onsetDate) newErrors.onsetDate = 'Onset date is required';
@@ -97,6 +130,8 @@ export default function SymptomsPage() {
       setCurrentStep(2);
     } else if (currentStep === 2 && validateStep2()) {
       setCurrentStep(3);
+    } else if (currentStep === 3 && validateStep3()) {
+      setCurrentStep(4);
     }
   };
 
@@ -119,11 +154,15 @@ export default function SymptomsPage() {
               setFormData({
                 village: '',
                 householdId: '',
-                patientCount: '',
+                patientCount: 1,
+                patientDetails: [],
                 symptoms: [],
                 onsetDate: '',
-                severity: 'mild',
-                notes: ''
+                severity: '',
+                notes: '',
+                photoUrls: [],
+                reportDate: new Date().toISOString(),
+                language: 'en'
               });
               // Navigate back to home
               router.back();
@@ -150,7 +189,7 @@ export default function SymptomsPage() {
       >
         Village <Text style={{ color: colors.error }}>*</Text>
       </Text>
-      <View className="flex flex-col gap-2 mb-4">
+      <View className="flex flex-col gap-2 mb-6">
         {villages.map((village) => (
           <TouchableOpacity
             key={village}
@@ -196,9 +235,19 @@ export default function SymptomsPage() {
       <Input
         label="Number of Patients"
         placeholder="How many people are affected?"
-        value={formData.patientCount}
+        value={patientCountInput}
         onChangeText={(text) => {
-          setFormData(prev => ({ ...prev, patientCount: text }));
+          setPatientCountInput(text);
+          const count = parseInt(text) || 0;
+          if (count > 0) {
+            setFormData(prev => ({ 
+              ...prev, 
+              patientCount: count,
+              patientDetails: Array(count).fill(null).map((_, index) => 
+                prev.patientDetails?.[index] || { age: undefined, gender: undefined, symptoms: [] }
+              )
+            }));
+          }
           if (errors.patientCount) setErrors(prev => ({ ...prev, patientCount: '' }));
         }}
         error={errors.patientCount}
@@ -206,56 +255,7 @@ export default function SymptomsPage() {
         type="number"
         icon="people-outline"
       />
-
-      {/* Symptoms Selection */}
-      <Text 
-        className="font-medium mb-2"
-        style={{ color: colors.foreground }}
-      >
-        Symptoms (select all that apply) <Text style={{ color: colors.error }}>*</Text>
-      </Text>
-      <View className="flex flex-col gap-3 mb-8">
-        {symptomOptions.map((symptom) => (
-          <TouchableOpacity
-            key={symptom.id}
-            activeOpacity={0.8}
-            onPress={() => toggleSymptom(symptom.id)}
-            className="flex-row items-center p-4 rounded-xl border-2"
-            style={{
-              borderColor: formData.symptoms.includes(symptom.id) ? colors.error : colors.border,
-              backgroundColor: formData.symptoms.includes(symptom.id) ? colors.error + '10' : colors.card,
-            }}
-          >
-            <View 
-              className="w-6 h-6 rounded border-2 mr-3 items-center justify-center"
-              style={{
-                borderColor: formData.symptoms.includes(symptom.id) ? colors.error : colors.border,
-                backgroundColor: formData.symptoms.includes(symptom.id) ? colors.error : 'transparent',
-              }}
-            >
-              {formData.symptoms.includes(symptom.id) && (
-                <Ionicons name="checkmark" size={16} color="#FFFFFF" />
-              )}
-            </View>
-            <Text 
-              className="ml-3 font-medium"
-              style={{
-                color: formData.symptoms.includes(symptom.id) ? colors.error : colors.foreground
-              }}
-            >
-              {symptom.label}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-      {errors.symptoms && (
-        <Text 
-          className="text-sm mb-4 ml-1"
-          style={{ color: colors.error }}
-        >
-          {errors.symptoms}
-        </Text>
-      )}
+      <View className='mb-6' />
     </ScrollView>
   );
 
@@ -265,9 +265,162 @@ export default function SymptomsPage() {
         className="text-xl font-bold mb-6"
         style={{ color: colors.foreground }}
       >
-        Additional Details
+        Patient Details
       </Text>
       
+      <Text 
+        className="text-sm mb-4"
+        style={{ color: colors.mutedForeground }}
+      >
+        Please provide details for each patient including their symptoms
+      </Text>
+
+      {Array.from({ length: formData.patientCount }, (_, index) => (
+        <Card key={index} variant="elevated" title={`Patient ${index + 1}`}>
+          <View className="flex-row gap-3 mb-4">
+            <View className="flex-1">
+              <Text 
+                className="font-medium mb-2"
+                style={{ color: colors.foreground }}
+              >
+                Age
+              </Text>
+              <TextInput
+                key={`age-input-${index}`}
+                placeholder="Enter age"
+                value={formData.patientDetails?.[index]?.age?.toString() || ''}
+                onChangeText={(text) => {
+                  console.log(`Age input ${index} changed to: ${text}`);
+                  setFormData(prev => {
+                    const newDetails = [...(prev.patientDetails || [])];
+                    newDetails[index] = { 
+                      ...newDetails[index], 
+                      age: text === '' ? undefined : parseInt(text) || undefined 
+                    };
+                    return { ...prev, patientDetails: newDetails };
+                  });
+                }}
+                keyboardType="numeric"
+                returnKeyType="done"
+                blurOnSubmit={false}
+                className="border rounded-xl py-4 px-4 text-base"
+                style={{
+                  backgroundColor: colors.card,
+                  borderColor: colors.border,
+                  color: colors.foreground,
+                }}
+                placeholderTextColor={colors.mutedForeground}
+              />
+            </View>
+            <View className="flex-1">
+              <Text 
+                className="font-medium mb-2"
+                style={{ color: colors.foreground }}
+              >
+                Gender
+              </Text>
+              <View className="flex-row gap-2">
+                {['male', 'female', 'other'].map((gender) => (
+                  <TouchableOpacity
+                    key={gender}
+                    activeOpacity={0.8}
+                    onPress={() => {
+                      setFormData(prev => {
+                        const newDetails = [...(prev.patientDetails || [])];
+                        newDetails[index] = { ...newDetails[index], gender: gender as 'male' | 'female' | 'other' };
+                        return { ...prev, patientDetails: newDetails };
+                      });
+                    }}
+                    className={`px-3 py-2 rounded-lg border ${
+                      formData.patientDetails?.[index]?.gender === gender ? 'border-2' : 'border'
+                    }`}
+                    style={{
+                      borderColor: formData.patientDetails?.[index]?.gender === gender ? colors.primary : colors.border,
+                      backgroundColor: formData.patientDetails?.[index]?.gender === gender ? colors.primary + '10' : colors.card,
+                    }}
+                  >
+                    <Text 
+                      className="text-xs capitalize text-center"
+                      style={{
+                        color: formData.patientDetails?.[index]?.gender === gender ? colors.primary : colors.foreground
+                      }}
+                    >
+                      {gender}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          </View>
+
+          {/* Symptoms for this patient */}
+          <Text 
+            className="font-medium mb-2"
+            style={{ color: colors.foreground }}
+          >
+            Symptoms for Patient {index + 1} <Text style={{ color: colors.error }}>*</Text>
+          </Text>
+          <View className="flex flex-col gap-2 mb-4">
+            {symptomOptions.map((symptom) => {
+              const isSelected = formData.patientDetails?.[index]?.symptoms?.includes(symptom.id) || false;
+              return (
+                <TouchableOpacity
+                  key={symptom.id}
+                  activeOpacity={0.8}
+                  onPress={() => togglePatientSymptom(index, symptom.id)}
+                  className="flex-row items-center p-3 rounded-lg border"
+                  style={{
+                    borderColor: isSelected ? colors.error : colors.border,
+                    backgroundColor: isSelected ? colors.error + '10' : colors.card,
+                  }}
+                >
+                  <View 
+                    className="w-5 h-5 rounded border mr-3 items-center justify-center"
+                    style={{
+                      borderColor: isSelected ? colors.error : colors.border,
+                      backgroundColor: isSelected ? colors.error : 'transparent',
+                    }}
+                  >
+                    {isSelected && (
+                      <Ionicons name="checkmark" size={12} color="#FFFFFF" />
+                    )}
+                  </View>
+                  <Text 
+                    className="font-medium text-sm"
+                    style={{
+                      color: isSelected ? colors.error : colors.foreground
+                    }}
+                  >
+                    {symptom.label}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </Card>
+      ))}
+      
+      {errors.symptoms && (
+        <Text 
+          className="text-sm mt-2 ml-1"
+          style={{ color: colors.error }}
+        >
+          {errors.symptoms}
+        </Text>
+      )}
+      <View className='mb-8' />
+    </ScrollView>
+  );
+
+  const renderStep3 = () => (
+    <ScrollView className="flex-1 p-4" showsVerticalScrollIndicator={false}>
+      <Text 
+        className="text-xl font-bold mb-6"
+        style={{ color: colors.foreground }}
+      >
+        Timeline & Severity
+      </Text>
+
       <Input
         label="When did symptoms start?"
         placeholder="e.g., Today, Yesterday, 2 days ago"
@@ -356,7 +509,7 @@ export default function SymptomsPage() {
       <Input
         label="Additional Notes (Optional)"
         placeholder="Any other symptoms or details..."
-        value={formData.notes}
+        value={formData.notes || ''}
         onChangeText={(text) => setFormData(prev => ({ ...prev, notes: text }))}
         multiline={true}
         numberOfLines={3}
@@ -365,7 +518,7 @@ export default function SymptomsPage() {
     </ScrollView>
   );
 
-  const renderStep3 = () => (
+  const renderStep4 = () => (
     <ScrollView className="flex-1 p-4" showsVerticalScrollIndicator={false}>
       <Text 
         className="text-xl font-bold mb-6"
@@ -403,33 +556,78 @@ export default function SymptomsPage() {
               {formData.patientCount}
             </Text>
           </View>
-          <View>
-            <Text 
-              className="mb-1"
-              style={{ color: colors.mutedForeground }}
-            >
-              Symptoms:
-            </Text>
-            <View className="flex-row flex-wrap gap-1">
-              {formData.symptoms.map((symptomId) => {
-                const symptom = symptomOptions.find(s => s.id === symptomId);
-                return (
-                  <View 
-                    key={symptomId} 
-                    className="px-2 py-1 rounded"
-                    style={{ backgroundColor: colors.error + '20' }}
+
+          {/* Patient Details Summary */}
+          {formData.patientDetails && formData.patientDetails.length > 0 && (
+            <View>
+              <Text 
+                className="mb-2 font-medium"
+                style={{ color: colors.foreground }}
+              >
+                Patient Details:
+              </Text>
+              {formData.patientDetails.map((patient, index) => (
+                <View key={index} className="ml-4 mb-2">
+                  <Text 
+                    className="text-sm"
+                    style={{ color: colors.mutedForeground }}
                   >
-                    <Text 
-                      className="text-sm"
-                      style={{ color: colors.error }}
-                    >
-                      {symptom?.label}
-                    </Text>
-                  </View>
-                );
-              })}
+                    Patient {index + 1}: {patient.age ? `Age ${patient.age}` : 'Age not specified'}, {patient.gender ? patient.gender : 'Gender not specified'}
+                  </Text>
+                </View>
+              ))}
             </View>
-          </View>
+          )}
+
+          {/* Patient Symptoms Summary */}
+          {formData.patientDetails && formData.patientDetails.length > 0 && (
+            <View>
+              <Text 
+                className="mb-2 font-medium"
+                style={{ color: colors.foreground }}
+              >
+                Patient Symptoms:
+              </Text>
+              {formData.patientDetails.map((patient, index) => (
+                <View key={index} className="ml-4 mb-3">
+                  <Text 
+                    className="text-sm font-medium mb-1"
+                    style={{ color: colors.foreground }}
+                  >
+                    Patient {index + 1}:
+                  </Text>
+                  {patient.symptoms && patient.symptoms.length > 0 ? (
+                    <View className="flex-row flex-wrap gap-1">
+                      {patient.symptoms.map((symptomId) => {
+                        const symptom = symptomOptions.find(s => s.id === symptomId);
+                        return (
+                          <View 
+                            key={symptomId} 
+                            className="px-2 py-1 rounded"
+                            style={{ backgroundColor: colors.error + '20' }}
+                          >
+                            <Text 
+                              className="text-xs"
+                              style={{ color: colors.error }}
+                            >
+                              {symptom?.label}
+                            </Text>
+                          </View>
+                        );
+                      })}
+                    </View>
+                  ) : (
+                    <Text 
+                      className="text-xs"
+                      style={{ color: colors.mutedForeground }}
+                    >
+                      No symptoms recorded
+                    </Text>
+                  )}
+                </View>
+              ))}
+            </View>
+          )}
           <View className="flex-row justify-between">
             <Text style={{color: colors.mutedForeground}}>Onset:</Text>
             <Text style={{color: colors.foreground}} className="font-medium">{formData.onsetDate}</Text>
@@ -468,7 +666,7 @@ export default function SymptomsPage() {
         title="Report Case" 
         showBack={true}
         onBackPress={() => router.back()}
-        subtitle={`Step ${currentStep} of 3`}
+        subtitle={`Step ${currentStep} of 4`}
       />
       
       <View 
@@ -479,8 +677,8 @@ export default function SymptomsPage() {
         }}
       >
         <ProgressBar 
-          progress={(currentStep / 3) * 100} 
-          total={3} 
+          progress={(currentStep / 4) * 100} 
+          total={4} 
           current={currentStep} 
           color="blue" 
         />
@@ -489,6 +687,7 @@ export default function SymptomsPage() {
       {currentStep === 1 && renderStep1()}
       {currentStep === 2 && renderStep2()}
       {currentStep === 3 && renderStep3()}
+      {currentStep === 4 && renderStep4()}
 
       {/* Navigation Buttons */}
       <View 
@@ -509,7 +708,7 @@ export default function SymptomsPage() {
             </View>
           )}
           <View className="flex-1">
-            {currentStep < 3 ? (
+            {currentStep < 4 ? (
               <Button
                 title="Next"
                 onPress={handleNext}
