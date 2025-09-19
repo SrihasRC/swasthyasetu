@@ -15,7 +15,7 @@ export default function Tile({ title, onPress, icon, description }: TileProps) {
   return (
     <TouchableOpacity
       onPress={onPress}
-      className="rounded-lg p-6 border"
+      className="rounded-lg p-6 border h-32 justify-center"
       style={{ 
         backgroundColor: colors.card,
         borderColor: colors.border,
@@ -27,7 +27,7 @@ export default function Tile({ title, onPress, icon, description }: TileProps) {
       }}
       activeOpacity={0.7}
     >
-      <View className="items-center space-y-3">
+      <View className="items-center justify-center flex-1">
         {icon && (
           <View className="mb-2">
             {icon}
@@ -35,16 +35,18 @@ export default function Tile({ title, onPress, icon, description }: TileProps) {
         )}
         
         <Text 
-          className="font-semibold text-center"
+          className="font-semibold text-center text-sm"
           style={{ color: colors.foreground }}
+          numberOfLines={2}
         >
           {title}
         </Text>
         
         {description && (
           <Text 
-            className="text-sm text-center"
+            className="text-xs text-center mt-1"
             style={{ color: colors.mutedForeground }}
+            numberOfLines={2}
           >
             {description}
           </Text>
