@@ -44,13 +44,6 @@ export default function HomePage() {
             >
               <Ionicons name="wifi" size={22} color={colors.success} />
             </TouchableOpacity>
-            <Link href="/test-components" asChild>
-              <TouchableOpacity 
-                className="p-2 rounded-full"
-              >
-                <Ionicons name="construct-outline" size={22} color={colors.secondary} />
-              </TouchableOpacity>
-            </Link>
             <Link href="/settings" asChild>
               <TouchableOpacity 
                 className="p-2 rounded-full"

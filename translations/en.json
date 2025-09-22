@@ -301,6 +301,8 @@
     "language": "Language",
     "languageSettings": "Language Settings",
     "languageDescription": "Change app language",
+    "viewReports": "View Saved Reports",
+    "viewReportsDescription": "Access your submitted symptoms and water quality reports",
     "profile": "Profile",
     "profileDescription": "Manage your profile information",
     "privacy": "Privacy",

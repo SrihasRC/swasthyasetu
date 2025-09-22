@@ -1,0 +1,128 @@
+{
+  "symptoms_template": {
+    "id": "symptom_1695999999999",
+    "savedAt": "2025-09-22T17:30:00.000Z",
+    "village": "Majuli Island",
+    "householdId": "MJ-2025-001",
+    "patientCount": 2,
+    "patientDetails": [
+      {
+        "age": 45,
+        "gender": "male",
+        "symptoms": ["fever", "diarrhea", "vomiting"]
+      },
+      {
+        "age": 12,
+        "gender": "female",
+        "symptoms": ["diarrhea", "dehydration"]
+      }
+    ],
+    "symptoms": ["diarrhea", "fever", "vomiting", "dehydration"],
+    "onsetDate": "2025-09-21",
+    "severity": "moderate",
+    "notes": "Symptoms started after consuming water from local well",
+    "gps": {
+      "lat": 26.9512,
+      "lng": 94.1750
+    },
+    "reporterId": "ASHA_MJ_001",
+    "reportDate": "2025-09-22T17:30:00.000Z",
+    "language": "en",
+    "contactNumber": "+91-9876543210"
+  },
+
+  "water_quality_template": {
+    "id": "water_1695999999999",
+    "savedAt": "2025-09-22T17:30:00.000Z",
+    "location": "Majuli Island - North Well",
+    "sourceType": "well",
+    "coordinates": "26.9512,94.1750",
+    "collectorName": "Inspector Kumar",
+    "collectionDate": "2025-09-22",
+    "parameters": {
+      "pH": "7.2",
+      "turbidity": "5",
+      "chlorine": "0.5",
+      "bacteria": "0",
+      "heavyMetals": {
+        "arsenic": "0.001",
+        "lead": "0.0005",
+        "iron": "0.3"
+      }
+    },
+    "qualitativeAssessment": {
+      "smell": "none",
+      "color": "clear",
+      "taste": "normal"
+    },
+    "notes": "Regular monitoring sample, no immediate concerns",
+    "recommendations": [
+      "Continue regular chlorination",
+      "Next inspection due in 7 days"
+    ],
+    "photos": [
+      {
+        "url": "sample_photo_1.jpg",
+        "type": "sample_collection",
+        "timestamp": "2025-09-22T17:25:00.000Z"
+      }
+    ],
+    "metadata": {
+      "deviceId": "WQA_DEVICE_001",
+      "inspectorId": "INS_MJ_001",
+      "temperatureCelsius": 25,
+      "weatherConditions": "clear"
+    }
+  },
+
+  "sample_database_structure": {
+    "symptoms": [
+      {
+        "id": "symptom_1695999999999",
+        "data": "/* symptoms_template structure */",
+        "status": "reported",
+        "lastUpdated": "2025-09-22T17:30:00.000Z"
+      }
+    ],
+    "water_quality": [
+      {
+        "id": "water_1695999999999",
+        "data": "/* water_quality_template structure */",
+        "status": "verified",
+        "lastUpdated": "2025-09-22T17:30:00.000Z"
+      }
+    ],
+    "alerts": [
+      {
+        "id": "alert_1695999999999",
+        "type": "water_quality",
+        "severity": "high",
+        "sourceId": "water_1695999999999",
+        "message": "High bacterial count detected",
+        "status": "active",
+        "createdAt": "2025-09-22T17:30:00.000Z",
+        "updatedAt": "2025-09-22T17:30:00.000Z"
+      }
+    ],
+    "areas": [
+      {
+        "id": "area_001",
+        "name": "Majuli Island",
+        "type": "island",
+        "coordinates": {
+          "lat": 26.9512,
+          "lng": 94.1750
+        },
+        "population": 167591,
+        "waterSources": [
+          {
+            "id": "ws_001",
+            "type": "well",
+            "name": "North Well",
+            "status": "active"
+          }
+        ]
+      }
+    ]
+  }
+}

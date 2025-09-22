@@ -10,6 +10,8 @@ import Header from '../../../components/Header';
 import Input from '../../../components/Input';
 import ProgressBar from '../../../components/ProgressBar';
 import { useAppTheme } from '../../../components/ThemeProvider';
+import { submitSymptomsData } from '../../../utils/api';
+import { saveSymptomData } from '../../../utils/storage';
 
 interface FormData {
   village: string;
@@ -135,42 +137,86 @@ export default function SymptomsPage() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      const dataToSubmit = {
+        ...formData,
+        reportDate: new Date().toISOString(),
+        gps: { lat: 0, lng: 0 }, // You should implement actual GPS coordinates
+      };
+
+      // Save to local file for verification
+      const saveResponse = await saveSymptomData(dataToSubmit);
+      if (!saveResponse.success) {
+        throw new Error(saveResponse.error || 'Failed to save data locally');
+      }
+
+      // Also try the API call (if backend is ready)
+      const response = await submitSymptomsData(dataToSubmit);
       
-      // Show success message
-      RNAlert.alert(
-        'Report Submitted Successfully',
-        'Your symptom report has been sent to health authorities. You will be contacted if further action is needed.',
-        [
-          {
-            text: 'OK',
-            onPress: () => {
-              // Reset form
-              setCurrentStep(1);
-              setFormData({
-                village: '',
-                householdId: '',
-                patientCount: 1,
-                patientDetails: [],
-                symptoms: [],
-                onsetDate: '',
-                severity: '',
-                notes: '',
-                photoUrls: [],
-                reportDate: new Date().toISOString(),
-                language: 'en'
-              });
-              // Navigate back to home
-              router.back();
+      if (response.success) {
+        RNAlert.alert(
+          'Report Submitted Successfully',
+          'Your symptom report has been saved locally. You can view it in the stored data page.',
+          [
+            { 
+              text: 'View Saved Data', 
+              onPress: () => {
+                // Reset form
+                setCurrentStep(1);
+                setFormData({
+                  village: '',
+                  householdId: '',
+                  patientCount: 1,
+                  patientDetails: [],
+                  symptoms: [],
+                  onsetDate: '',
+                  severity: '',
+                  notes: '',
+                  photoUrls: [],
+                  reportDate: new Date().toISOString(),
+                  language: 'en'
+                });
+                // Navigate to stored data page
+                router.push('/stored-data');
+              }
+            },
+            {
+              text: 'Close',
+              onPress: () => {
+                // Reset form and go back
+                setCurrentStep(1);
+                setFormData({
+                  village: '',
+                  householdId: '',
+                  patientCount: 1,
+                  patientDetails: [],
+                  symptoms: [],
+                  onsetDate: '',
+                  severity: '',
+                  notes: '',
+                  photoUrls: [],
+                  reportDate: new Date().toISOString(),
+                  language: 'en'
+                });
+                router.back();
+              }
             }
-          }
-        ]
+          ]
+        );
+      } else {
+        throw new Error(response.error || 'Failed to submit report');
+      }
+    } catch (error) {
+      RNAlert.alert(
+        'Error',
+        error instanceof Error ? error.message : 'Failed to submit report. Please try again.',
+        [{ text: 'OK' }]
       );
-    }, 2000);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const renderStep1 = () => (

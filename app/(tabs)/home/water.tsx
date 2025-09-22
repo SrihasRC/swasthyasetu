@@ -10,6 +10,7 @@ import Header from '../../../components/Header';
 import Input from '../../../components/Input';
 import ProgressBar from '../../../components/ProgressBar';
 import { useAppTheme } from '../../../components/ThemeProvider';
+import { submitWaterData } from '../../../utils/api';
 
 interface WaterFormData {
   location: string;
@@ -218,7 +219,38 @@ export default function WaterQualityPage() {
     );
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      const dataToSubmit = {
+        ...formData,
+        submissionDate: new Date().toISOString(),
+        reporterId: 'user_id', // You should implement proper user ID tracking
+        coordinates: formData.coordinates || 'not_available',
+      };
+
+      const response = await submitWaterData(dataToSubmit);
+      
+      if (response.success) {
+        RNAlert.alert(
+          t('water.submitSuccess'),
+          t('water.submitSuccessMessage'),
+          [
+            { text: 'OK', onPress: () => router.back() }
+          ]
+        );
+      } else {
+        throw new Error(response.error || t('water.submitError'));
+      }
+    } catch (error) {
+      RNAlert.alert(
+        t('common.error'),
+        error instanceof Error ? error.message : t('water.submitError'),
+        [{ text: 'OK' }]
+      );
+    } finally {
+      setLoading(false);
+    }
     setLoading(true);
     // Simulate API call
     setTimeout(() => {

@@ -88,6 +88,36 @@ export default function SettingsPage() {
             />
           </View>
           
+          {/* View Saved Reports */}
+          <TouchableOpacity 
+            onPress={() => router.push('/stored-data')}
+            className="p-4 rounded-lg border"
+            style={{ 
+              backgroundColor: colors.card,
+              borderColor: colors.border,
+            }}
+          >
+            <View className="flex-row items-center gap-3">
+              <Ionicons 
+                name="documents-outline" 
+                size={20} 
+                color={colors.primary} 
+              />
+              <Text 
+                className="font-medium"
+                style={{ color: colors.foreground }}
+              >
+                {t('settings.viewReports')}
+              </Text>
+            </View>
+            <Text 
+              className="text-sm mt-1"
+              style={{ color: colors.mutedForeground }}
+            >
+              {t('settings.viewReportsDescription')}
+            </Text>
+          </TouchableOpacity>
+
           {/* Language Settings */}
           <View 
             className="p-4 rounded-lg border"
