@@ -21,11 +21,7 @@ function RootContent() {
         className="flex-1"
         style={{ backgroundColor: colors.background }}
       >
-        <Slot 
-          screenOptions={{
-            contentStyle: { backgroundColor: colors.background }
-          }}
-        />
+        <Slot />
       </View>
     </>
   );
