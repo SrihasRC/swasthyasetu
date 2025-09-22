@@ -6,8 +6,9 @@ import { initReactI18next } from 'react-i18next';
 // Import translation files
 import en from '../../translations/en.json';
 import hi from '../../translations/hi.json';
+import as from '../../translations/as.json';
 
-export type Language = 'en' | 'hi';
+export type Language = 'en' | 'hi' | 'as';
 
 const LANGUAGE_STORAGE_KEY = '@SwasthyaSetu:language';
 
@@ -26,7 +27,7 @@ const languageDetector = {
       // Fall back to device locale
       const locales = getLocales();
       const deviceLanguage = locales[0]?.languageCode || 'en';
-      const supportedLanguage = ['en', 'hi'].includes(deviceLanguage) ? deviceLanguage : 'en';
+      const supportedLanguage = ['en', 'hi', 'as'].includes(deviceLanguage) ? deviceLanguage : 'en';
       callback(supportedLanguage);
     } catch (error) {
       console.error('Error detecting language:', error);
@@ -49,6 +50,9 @@ const resources = {
   },
   hi: {
     translation: hi,
+  },
+  as: {
+    translation: as,
   },
 };
 

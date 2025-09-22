@@ -13,6 +13,7 @@ const LanguageToggle: React.FC = () => {
   const getLanguageDisplay = (lang: string) => {
     switch (lang) {
       case 'hi': return 'हिन्दी';
+      case 'as': return 'অসমীয়া';
       case 'en': return 'English';
       default: return 'English';
     }

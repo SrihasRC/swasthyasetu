@@ -72,15 +72,15 @@ export default function AlertsScreen() {
     }
   };
 
-  const getRiskBorderColor = (level: Alert['riskLevel']) => {
-    switch (level) {
-      case 'HIGH': return colors.riskCritical;
-      case 'MEDIUM': return colors.riskMedium;
-      case 'LOW': return colors.riskLow;
-      case 'RESOLVED': return colors.success;
-      default: return colors.border;
-    }
-  };
+  // const getRiskBorderColor = (level: Alert['riskLevel']) => {
+  //   switch (level) {
+  //     case 'HIGH': return colors.riskCritical;
+  //     case 'MEDIUM': return colors.riskMedium;
+  //     case 'LOW': return colors.riskLow;
+  //     case 'RESOLVED': return colors.success;
+  //     default: return colors.border;
+  //   }
+  // };
 
   const getRiskIcon = (type: Alert['type']) => {
     switch (type) {
@@ -156,10 +156,9 @@ export default function AlertsScreen() {
               activeOpacity={0.8}
             >
               <View 
-                className="p-5 rounded-xl border-l-2 shadow-sm"
+                className="p-5 rounded-xl shadow-sm"
                 style={{ 
                   backgroundColor: colors.card,
-                  borderLeftColor: getRiskBorderColor(alert.riskLevel),
                   borderColor: colors.border,
                   borderWidth: 1,
                 }}
