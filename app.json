@@ -51,8 +51,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "50232dbb-d355-45b3-bdd6-8634a8a18738"
+        "projectId": "8c769d36-bf84-4020-ae87-aa0810b5f1ea"
       }
-    }
+    },
+    "owner": "srhs"
   }
 }
